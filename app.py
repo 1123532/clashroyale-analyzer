@@ -7,8 +7,259 @@ from urllib.parse import quote
 st.set_page_config(
     page_title="Clash Royale Analyzer",
     page_icon="⚔️",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
+
+st.markdown("""
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    
+    .stApp {
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .main-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem 2rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+    }
+    
+    .main-header h1 {
+        color: white;
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .main-header p {
+        color: rgba(255,255,255,0.9);
+        font-size: 1.1rem;
+        margin-top: 0.5rem;
+    }
+    
+    .stat-card {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .stat-label {
+        color: #a0a0a0;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 0.5rem;
+    }
+    
+    .section-header {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #667eea;
+        margin: 2rem 0 1rem 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 3px solid #667eea;
+    }
+    
+    .card-item {
+        background: linear-gradient(135deg, #1f1f3d 0%, #2d2d5a 100%);
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        border: 1px solid rgba(102, 126, 234, 0.3);
+    }
+    
+    .card-name {
+        font-weight: 600;
+        color: #fff;
+        font-size: 0.9rem;
+    }
+    
+    .card-level {
+        color: #667eea;
+        font-size: 0.8rem;
+    }
+    
+    .battle-win {
+        background: linear-gradient(135deg, rgba(46, 204, 113, 0.2) 0%, rgba(39, 174, 96, 0.2) 100%);
+        border-left: 4px solid #2ecc71;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 0.5rem 0;
+    }
+    
+    .battle-loss {
+        background: linear-gradient(135deg, rgba(231, 76, 60, 0.2) 0%, rgba(192, 57, 43, 0.2) 100%);
+        border-left: 4px solid #e74c3c;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 0.5rem 0;
+    }
+    
+    .battle-draw {
+        background: linear-gradient(135deg, rgba(149, 165, 166, 0.2) 0%, rgba(127, 140, 141, 0.2) 100%);
+        border-left: 4px solid #95a5a6;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 0.5rem 0;
+    }
+    
+    .tip-card {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        border-left: 4px solid #667eea;
+        border-radius: 8px;
+        padding: 1.2rem;
+        margin: 0.8rem 0;
+    }
+    
+    .chest-card {
+        background: linear-gradient(135deg, #2d2d5a 0%, #1f1f3d 100%);
+        border-radius: 12px;
+        padding: 1.2rem;
+        text-align: center;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        transition: transform 0.3s ease;
+    }
+    
+    .chest-card:hover {
+        transform: scale(1.05);
+    }
+    
+    .demo-banner {
+        background: linear-gradient(135deg, #f39c12 0%, #e74c3c 100%);
+        padding: 1rem;
+        border-radius: 12px;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .demo-banner p {
+        color: white;
+        font-weight: 600;
+        margin: 0;
+    }
+    
+    .clan-badge {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        display: inline-block;
+    }
+    
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+        background: rgba(26, 26, 46, 0.5);
+        padding: 0.5rem;
+        border-radius: 12px;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        background: transparent;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    div[data-testid="stMetric"] {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        border-radius: 12px;
+        padding: 1rem;
+        border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+    
+    div[data-testid="stMetric"] label {
+        color: #a0a0a0;
+    }
+    
+    div[data-testid="stMetric"] [data-testid="stMetricValue"] {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+    }
+    
+    .stDataFrame {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    
+    .stExpander {
+        background: rgba(26, 26, 46, 0.5);
+        border-radius: 12px;
+        border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+    
+    .pro-tip {
+        background: rgba(46, 204, 113, 0.1);
+        border-left: 4px solid #2ecc71;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+    }
+    
+    .arena-tip {
+        background: linear-gradient(135deg, rgba(241, 196, 15, 0.15) 0%, rgba(243, 156, 18, 0.15) 100%);
+        border: 1px solid rgba(241, 196, 15, 0.3);
+        border-radius: 12px;
+        padding: 1.5rem;
+    }
+    
+    .input-section {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 2rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+    
+    .stButton > button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    .toggle-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 1rem;
+    }
+</style>
+""", unsafe_allow_html=True)
 
 API_BASE_URL = "https://proxy.royaleapi.dev/v1"
 
@@ -170,7 +421,7 @@ DEMO_PROFILE = {
     'name': 'ProGamer2024',
     'trophies': 7542,
     'bestTrophies': 8123,
-    'expLevel': 13,
+    'expLevel': 14,
     'wins': 2458,
     'losses': 1823,
     'threeCrownWins': 487,
@@ -180,88 +431,28 @@ DEMO_PROFILE = {
     'arena': {'id': 9, 'name': 'Legendary Arena'},
     'clan': {'tag': '#LYG82GQ8', 'name': 'Elite Dragons'},
     'currentDeck': [
-        {'name': 'Hog Rider', 'level': 12},
-        {'name': 'Fireball', 'level': 13},
-        {'name': 'Knight', 'level': 13},
-        {'name': 'Ice Spirit', 'level': 13},
-        {'name': 'The Log', 'level': 5},
-        {'name': 'Skeletons', 'level': 13},
-        {'name': 'Bats', 'level': 13},
-        {'name': 'Inferno Dragon', 'level': 11}
+        {'name': 'Hog Rider', 'level': 14},
+        {'name': 'Fireball', 'level': 14},
+        {'name': 'Knight', 'level': 14},
+        {'name': 'Ice Spirit', 'level': 14},
+        {'name': 'The Log', 'level': 14},
+        {'name': 'Skeletons', 'level': 14},
+        {'name': 'Bats', 'level': 14},
+        {'name': 'Inferno Dragon', 'level': 14}
     ]
 }
 
 DEMO_BATTLES = [
-    {'team': [{'name': 'ProGamer2024', 'crowns': 3, 'cards': [
-        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
-        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
-    ]}], 'opponent': [{'name': 'Dredgen', 'crowns': 0, 'cards': [
-        {'name': 'Mega Knight'}, {'name': 'Tornado'}, {'name': 'Inferno Dragon'}, {'name': 'Goblins'},
-        {'name': 'Goblin Barrel'}, {'name': 'Princess'}, {'name': 'Archers'}, {'name': 'Valkyrie'}
-    ]}], 'gameMode': {'name': 'Ladder'}},
-    {'team': [{'name': 'ProGamer2024', 'crowns': 2, 'cards': [
-        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
-        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
-    ]}], 'opponent': [{'name': 'XKillzX', 'crowns': 1, 'cards': [
-        {'name': 'P.E.K.K.A'}, {'name': 'Mirror'}, {'name': 'Minions'}, {'name': 'Arrows'},
-        {'name': 'Elixir Collector'}, {'name': 'Dark Prince'}, {'name': 'Giant'}, {'name': 'Musketeer'}
-    ]}], 'gameMode': {'name': 'Ladder'}},
-    {'team': [{'name': 'ProGamer2024', 'crowns': 1, 'cards': [
-        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
-        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
-    ]}], 'opponent': [{'name': 'SkyKnight', 'crowns': 1, 'cards': [
-        {'name': 'Royal Giant'}, {'name': 'Clone'}, {'name': 'Rage'}, {'name': 'Goblins'},
-        {'name': 'Fire Spirits'}, {'name': 'Guards'}, {'name': 'Musketeer'}, {'name': 'Wizard'}
-    ]}], 'gameMode': {'name': 'Ladder'}},
-    {'team': [{'name': 'ProGamer2024', 'crowns': 3, 'cards': [
-        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
-        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
-    ]}], 'opponent': [{'name': 'IceWizard99', 'crowns': 0, 'cards': [
-        {'name': 'Golem'}, {'name': 'Night Witch'}, {'name': 'Balloon'}, {'name': 'Arrows'},
-        {'name': 'Elixir Collector'}, {'name': 'Bomber'}, {'name': 'Skeletons'}, {'name': 'Tombstone'}
-    ]}], 'gameMode': {'name': 'Ladder'}},
-    {'team': [{'name': 'ProGamer2024', 'crowns': 2, 'cards': [
-        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
-        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
-    ]}], 'opponent': [{'name': 'LavaLoon', 'crowns': 1, 'cards': [
-        {'name': 'Lava Hound'}, {'name': 'Balloon'}, {'name': 'Minions'}, {'name': 'Fire Spirits'},
-        {'name': 'Arrows'}, {'name': 'Guards'}, {'name': 'Barbarians'}, {'name': 'Furnace'}
-    ]}], 'gameMode': {'name': 'Ladder'}},
-    {'team': [{'name': 'ProGamer2024', 'crowns': 3, 'cards': [
-        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
-        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
-    ]}], 'opponent': [{'name': 'MirrorMaster', 'crowns': 0, 'cards': [
-        {'name': 'Three Musketeers'}, {'name': 'Mirror'}, {'name': 'Clone'}, {'name': 'Fireball'},
-        {'name': 'Furnace'}, {'name': 'Inferno Tower'}, {'name': 'Minions'}, {'name': 'Bats'}
-    ]}], 'gameMode': {'name': 'Ladder'}},
-    {'team': [{'name': 'ProGamer2024', 'crowns': 2, 'cards': [
-        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
-        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
-    ]}], 'opponent': [{'name': 'EGiant_User', 'crowns': 1, 'cards': [
-        {'name': 'Electro Giant'}, {'name': 'Rage'}, {'name': 'Clone'}, {'name': 'Heal Spirit'},
-        {'name': 'Guards'}, {'name': 'Goblins'}, {'name': 'Zap'}, {'name': 'Arrows'}
-    ]}], 'gameMode': {'name': 'Ladder'}},
-    {'team': [{'name': 'ProGamer2024', 'crowns': 3, 'cards': [
-        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
-        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
-    ]}], 'opponent': [{'name': 'CrossbowTower', 'crowns': 0, 'cards': [
-        {'name': 'X-Bow'}, {'name': 'Inferno Tower'}, {'name': 'Fireball'}, {'name': 'Arrows'},
-        {'name': 'Barbarians'}, {'name': 'Knight'}, {'name': 'Elixir Collector'}, {'name': 'Tesla'}
-    ]}], 'gameMode': {'name': 'Ladder'}},
-    {'team': [{'name': 'ProGamer2024', 'crowns': 2, 'cards': [
-        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
-        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
-    ]}], 'opponent': [{'name': 'GiantSkeleton', 'crowns': 0, 'cards': [
-        {'name': 'Giant Skeleton'}, {'name': 'Poison'}, {'name': 'Minion Horde'}, {'name': 'Barbarians'},
-        {'name': 'Goblins'}, {'name': 'Arrows'}, {'name': 'Bats'}, {'name': 'Tombstone'}
-    ]}], 'gameMode': {'name': 'Ladder'}},
-    {'team': [{'name': 'ProGamer2024', 'crowns': 3, 'cards': [
-        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
-        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
-    ]}], 'opponent': [{'name': 'SkeletonKing', 'crowns': 0, 'cards': [
-        {'name': 'Skeleton King'}, {'name': 'Arrows'}, {'name': 'Goblins'}, {'name': 'Fire Spirits'},
-        {'name': 'Knight'}, {'name': 'Barbarians'}, {'name': 'Minions'}, {'name': 'Valkyrie'}
-    ]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 3, 'cards': [{'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'}, {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}]}], 'opponent': [{'name': 'Dredgen', 'crowns': 0, 'cards': [{'name': 'Mega Knight'}, {'name': 'Tornado'}, {'name': 'Inferno Dragon'}, {'name': 'Goblins'}, {'name': 'Goblin Barrel'}, {'name': 'Princess'}, {'name': 'Archers'}, {'name': 'Valkyrie'}]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 2, 'cards': [{'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'}, {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}]}], 'opponent': [{'name': 'XKillzX', 'crowns': 1, 'cards': [{'name': 'P.E.K.K.A'}, {'name': 'Mirror'}, {'name': 'Minions'}, {'name': 'Arrows'}, {'name': 'Elixir Collector'}, {'name': 'Dark Prince'}, {'name': 'Giant'}, {'name': 'Musketeer'}]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 1, 'cards': [{'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'}, {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}]}], 'opponent': [{'name': 'SkyKnight', 'crowns': 1, 'cards': [{'name': 'Royal Giant'}, {'name': 'Clone'}, {'name': 'Rage'}, {'name': 'Goblins'}, {'name': 'Fire Spirits'}, {'name': 'Guards'}, {'name': 'Musketeer'}, {'name': 'Wizard'}]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 3, 'cards': [{'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'}, {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}]}], 'opponent': [{'name': 'IceWizard99', 'crowns': 0, 'cards': [{'name': 'Golem'}, {'name': 'Night Witch'}, {'name': 'Balloon'}, {'name': 'Arrows'}, {'name': 'Elixir Collector'}, {'name': 'Bomber'}, {'name': 'Skeletons'}, {'name': 'Tombstone'}]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 2, 'cards': [{'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'}, {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}]}], 'opponent': [{'name': 'LavaLoon', 'crowns': 1, 'cards': [{'name': 'Lava Hound'}, {'name': 'Balloon'}, {'name': 'Minions'}, {'name': 'Fire Spirits'}, {'name': 'Arrows'}, {'name': 'Guards'}, {'name': 'Barbarians'}, {'name': 'Furnace'}]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 0, 'cards': [{'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'}, {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}]}], 'opponent': [{'name': 'MirrorMaster', 'crowns': 2, 'cards': [{'name': 'Three Musketeers'}, {'name': 'Mirror'}, {'name': 'Clone'}, {'name': 'Fireball'}, {'name': 'Furnace'}, {'name': 'Inferno Tower'}, {'name': 'Minions'}, {'name': 'Bats'}]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 2, 'cards': [{'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'}, {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}]}], 'opponent': [{'name': 'EGiant_User', 'crowns': 1, 'cards': [{'name': 'Electro Giant'}, {'name': 'Rage'}, {'name': 'Clone'}, {'name': 'Heal Spirit'}, {'name': 'Guards'}, {'name': 'Goblins'}, {'name': 'Zap'}, {'name': 'Arrows'}]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 3, 'cards': [{'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'}, {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}]}], 'opponent': [{'name': 'CrossbowTower', 'crowns': 0, 'cards': [{'name': 'X-Bow'}, {'name': 'Inferno Tower'}, {'name': 'Fireball'}, {'name': 'Arrows'}, {'name': 'Barbarians'}, {'name': 'Knight'}, {'name': 'Elixir Collector'}, {'name': 'Tesla'}]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 1, 'cards': [{'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'}, {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}]}], 'opponent': [{'name': 'GiantSkeleton', 'crowns': 3, 'cards': [{'name': 'Giant Skeleton'}, {'name': 'Poison'}, {'name': 'Minion Horde'}, {'name': 'Barbarians'}, {'name': 'Goblins'}, {'name': 'Arrows'}, {'name': 'Bats'}, {'name': 'Tombstone'}]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 3, 'cards': [{'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'}, {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}]}], 'opponent': [{'name': 'SkeletonKing', 'crowns': 0, 'cards': [{'name': 'Skeleton King'}, {'name': 'Arrows'}, {'name': 'Goblins'}, {'name': 'Fire Spirits'}, {'name': 'Knight'}, {'name': 'Barbarians'}, {'name': 'Minions'}, {'name': 'Valkyrie'}]}], 'gameMode': {'name': 'Ladder'}},
 ]
 
 DEMO_CHESTS = {
@@ -271,23 +462,27 @@ DEMO_CHESTS = {
         {'name': 'Silver Chest', 'index': 2},
         {'name': 'Gold Chest', 'index': 3},
         {'name': 'Magical Chest', 'index': 4},
-        {'name': 'Gold Chest', 'index': 5},
-        {'name': 'Epic Chest', 'index': 6},
-        {'name': 'Gold Chest', 'index': 7},
+        {'name': 'Legendary Chest', 'index': 8},
+        {'name': 'Epic Chest', 'index': 12},
+        {'name': 'Mega Lightning Chest', 'index': 20},
     ]
 }
 
-st.title("⚔️ Clash Royale Player Analyzer")
-st.markdown("Analyze your stats and get personalized tips to improve your gameplay!")
+st.markdown("""
+<div class="main-header">
+    <h1>Clash Royale Analyzer</h1>
+    <p>Analyze your stats and get personalized tips to dominate the arena</p>
+</div>
+""", unsafe_allow_html=True)
 
-col1, col2 = st.columns([0.85, 0.15])
-with col2:
-    demo_mode = st.toggle("🎮 Demo Mode", value=False, help="Try the analyzer with sample data")
+col1, col2, col3 = st.columns([1, 2, 1])
+with col3:
+    demo_mode = st.toggle("Demo Mode", value=False, help="Try the analyzer with sample data")
 
 with st.sidebar:
-    st.header("Settings")
+    st.markdown("### Settings")
     if demo_mode:
-        st.info("📌 Running in **Demo Mode** with sample data")
+        st.info("Running in Demo Mode with sample data")
     
     api_token = st.text_input(
         "API Token",
@@ -314,20 +509,28 @@ chests = None
 
 if demo_mode:
     player_tag = "ProGamer2024"
-    col1, col2 = st.columns([0.85, 0.15])
-    with col1:
-        st.info("👁️ **Demo Preview:** Showing sample player data. Try the 5 analysis tabs below!")
+    st.markdown("""
+    <div class="demo-banner">
+        <p>Demo Preview: Showing sample player data. Explore the tabs below!</p>
+    </div>
+    """, unsafe_allow_html=True)
     profile = DEMO_PROFILE
     battles = DEMO_BATTLES
     chests = DEMO_CHESTS
 else:
-    player_tag = st.text_input(
-        "Enter Player Tag",
-        placeholder="#ABC123 or ABC123",
-        help="Your Clash Royale player tag (with or without #)"
-    )
+    col1, col2, col3 = st.columns([2, 1, 1])
+    with col1:
+        player_tag = st.text_input(
+            "Enter Player Tag",
+            placeholder="#ABC123 or ABC123",
+            help="Your Clash Royale player tag (with or without #)"
+        )
+    with col2:
+        st.write("")
+        st.write("")
+        analyze_btn = st.button("Analyze Player", type="primary", disabled=not player_tag or not st.session_state.get('api_token'), use_container_width=True)
     
-    if st.button("Analyze Player", type="primary", disabled=not player_tag or not st.session_state.get('api_token')):
+    if analyze_btn:
         if not st.session_state.get('api_token'):
             st.error("Please enter your API token in the sidebar first.")
         else:
@@ -338,183 +541,272 @@ else:
             
             if not profile:
                 st.error("Could not find player. Check the tag and API token, then try again.")
-            else:
-                st.success(f"Found player: **{profile.get('name', 'Unknown')}**")
-                st.session_state['profile_loaded'] = True
 
 if profile:
     if demo_mode:
-        st.success(f"Demo Account: **{profile.get('name', 'Unknown')}** (Sample Data)")
+        pass
+    else:
+        st.success(f"Found player: **{profile.get('name', 'Unknown')}**")
     
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "Profile", "Battle Stats", "Card Analysis", "Upcoming Chests", "Improvement Tips"
     ])
     
-    if profile:
-        try:
-            with tab1:
-                st.header(f"👤 {profile.get('name', 'Unknown')}")
+    with tab1:
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            st.markdown(f"## {profile.get('name', 'Unknown')}")
+            st.caption(f"Tag: {profile.get('tag', 'N/A')}")
+        
+        st.markdown("---")
+        
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Trophies", f"{profile.get('trophies', 0):,}")
+        with col2:
+            st.metric("Best Trophies", f"{profile.get('bestTrophies', 0):,}")
+        with col3:
+            st.metric("Level", profile.get('expLevel', 1))
+        with col4:
+            arena = profile.get('arena', {})
+            st.metric("Arena", arena.get('name', 'Unknown'))
+        
+        st.markdown("### Battle Record")
+        col1, col2, col3, col4 = st.columns(4)
+        wins = profile.get('wins', 0)
+        losses = profile.get('losses', 0)
+        with col1:
+            st.metric("Wins", f"{wins:,}")
+        with col2:
+            st.metric("Losses", f"{losses:,}")
+        with col3:
+            st.metric("Total Battles", f"{profile.get('battleCount', 0):,}")
+        with col4:
+            winrate = (wins / (wins + losses) * 100) if (wins + losses) > 0 else 0
+            st.metric("Win Rate", f"{winrate:.1f}%")
+        
+        st.markdown("### Achievements")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("3 Crown Wins", f"{profile.get('threeCrownWins', 0):,}")
+        with col2:
+            st.metric("Challenge Max Wins", profile.get('challengeMaxWins', 0))
+        with col3:
+            st.metric("Total Donations", f"{profile.get('totalDonations', 0):,}")
+        
+        clan = profile.get('clan')
+        if clan:
+            st.markdown("### Clan")
+            st.markdown(f"""
+            <div class="clan-badge">
+                <strong>{clan.get('name', 'Unknown')}</strong><br>
+                <span style="opacity: 0.8;">Tag: {clan.get('tag', 'N/A')}</span>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        current_deck = profile.get('currentDeck', [])
+        if current_deck:
+            st.markdown("### Current Deck")
+            deck_cols = st.columns(8)
+            for i, card in enumerate(current_deck[:8]):
+                with deck_cols[i]:
+                    st.markdown(f"""
+                    <div class="card-item">
+                        <div class="card-name">{card.get('name', 'Unknown')}</div>
+                        <div class="card-level">Lvl {card.get('level', 1)}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+    
+    with tab2:
+        st.markdown("## Recent Battle Analysis")
+        
+        if battles:
+            battle_stats = analyze_battles(battles)
+            
+            if battle_stats:
                 col1, col2, col3, col4 = st.columns(4)
                 with col1:
-                    st.metric("Trophies", f"🏆 {profile.get('trophies', 0)}")
+                    st.metric("Recent Battles", battle_stats['total_battles'])
                 with col2:
-                    st.metric("Best Trophies", f"⭐ {profile.get('bestTrophies', 0)}")
+                    st.metric("Wins", battle_stats['wins'])
                 with col3:
-                    st.metric("Level", f"📊 {profile.get('expLevel', 1)}")
+                    st.metric("Losses", battle_stats['losses'])
                 with col4:
-                    arena = profile.get('arena', {})
-                    st.metric("Arena", arena.get('name', 'Unknown'))
-                st.subheader("Battle Record")
-                col1, col2, col3, col4 = st.columns(4)
-                wins = profile.get('wins', 0)
-                losses = profile.get('losses', 0)
-                with col1:
-                    st.metric("Wins", f"✅ {wins}")
-                with col2:
-                    st.metric("Losses", f"❌ {losses}")
-                with col3:
-                    st.metric("Total Battles", profile.get('battleCount', 0))
-                with col4:
-                    winrate = (wins / (wins + losses) * 100) if (wins + losses) > 0 else 0
-                    st.metric("Win Rate", f"{winrate:.1f}%")
-                st.subheader("Achievements")
+                    recent_wr = (battle_stats['wins'] / battle_stats['total_battles'] * 100) if battle_stats['total_battles'] > 0 else 0
+                    st.metric("Win Rate", f"{recent_wr:.1f}%")
+                
                 col1, col2, col3 = st.columns(3)
                 with col1:
-                    st.metric("3 Crown Wins", profile.get('threeCrownWins', 0))
+                    st.metric("Crowns Earned", battle_stats['crowns_earned'])
                 with col2:
-                    st.metric("Challenge Max Wins", profile.get('challengeMaxWins', 0))
+                    st.metric("Crowns Lost", battle_stats['crowns_given'])
                 with col3:
-                    st.metric("Cards Found", f"{profile.get('totalDonations', 0)} donated")
-                clan = profile.get('clan')
-                if clan:
-                    st.subheader("Clan")
-                    st.info(f"**{clan.get('name', 'Unknown')}** (Tag: {clan.get('tag', 'N/A')})")
-                current_deck = profile.get('currentDeck', [])
-                if current_deck:
-                    st.subheader("Current Deck")
-                    deck_cols = st.columns(8)
-                    for i, card in enumerate(current_deck[:8]):
-                        with deck_cols[i]:
-                            st.markdown(f"**{card.get('name', 'Unknown')}**")
-                            st.caption(f"Lvl {card.get('level', 1)}")
-            with tab2:
-                st.header("📊 Recent Battle Analysis")
-                if battles:
-                    battle_stats = analyze_battles(battles)
-                    if battle_stats:
-                        col1, col2, col3, col4 = st.columns(4)
-                        with col1:
-                            st.metric("Recent Battles", battle_stats['total_battles'])
-                        with col2:
-                            st.metric("Recent Wins", battle_stats['wins'])
-                        with col3:
-                            st.metric("Recent Losses", battle_stats['losses'])
-                        with col4:
-                            recent_wr = (battle_stats['wins'] / battle_stats['total_battles'] * 100) if battle_stats['total_battles'] > 0 else 0
-                            st.metric("Recent Win Rate", f"{recent_wr:.1f}%")
-                        col1, col2 = st.columns(2)
-                        with col1:
-                            st.metric("Crowns Earned", f"👑 {battle_stats['crowns_earned']}")
-                        with col2:
-                            st.metric("Crowns Given Up", f"💀 {battle_stats['crowns_given']}")
-                        if battle_stats['game_modes']:
-                            st.subheader("Performance by Game Mode")
-                            mode_data = []
-                            for mode, stats in battle_stats['game_modes'].items():
-                                wr = (stats['wins'] / stats['plays'] * 100) if stats['plays'] > 0 else 0
-                                mode_data.append({'Game Mode': mode, 'Battles': stats['plays'], 'Wins': stats['wins'], 'Win Rate': f"{wr:.1f}%"})
-                            st.dataframe(pd.DataFrame(mode_data), use_container_width=True)
-                        st.subheader("Recent Battles")
-                        for battle in battles[:10]:
-                            team = battle.get('team', [{}])[0]
-                            opponent = battle.get('opponent', [{}])[0]
-                            team_crowns = team.get('crowns', 0)
-                            opp_crowns = opponent.get('crowns', 0)
-                            result = "✅ WIN" if team_crowns > opp_crowns else ("❌ LOSS" if team_crowns < opp_crowns else "🤝 DRAW")
-                            game_mode = battle.get('gameMode', {}).get('name', 'Unknown')
-                            with st.expander(f"{result} vs {opponent.get('name', 'Unknown')} ({team_crowns}-{opp_crowns}) - {game_mode}"):
-                                st.write(f"**Your Deck:** {', '.join([c.get('name', '?') for c in team.get('cards', [])])}")
-                                st.write(f"**Opponent Deck:** {', '.join([c.get('name', '?') for c in opponent.get('cards', [])])}")
-                else:
-                    st.info("No recent battles found.")
-            with tab3:
-                st.header("🃏 Card Performance Analysis")
-                if battles:
-                    battle_stats = analyze_battles(battles)
-                    if battle_stats and battle_stats['cards_used']:
-                        card_data = [{'Card': card_name, 'Times Used': stats['uses'], 'Wins': stats['wins'], 'Win Rate': (stats['wins'] / stats['uses'] * 100)} for card_name, stats in battle_stats['cards_used'].items() if stats['uses'] >= 1]
-                        df = pd.DataFrame(card_data).sort_values('Win Rate', ascending=False)
-                        st.subheader("Best Performing Cards")
-                        best_df = df.head(5).copy()
-                        best_df['Win Rate'] = best_df['Win Rate'].apply(lambda x: f"{x:.1f}%")
-                        st.dataframe(best_df, use_container_width=True)
-                        st.subheader("Worst Performing Cards")
-                        worst_df = df.tail(5).copy()
-                        worst_df['Win Rate'] = worst_df['Win Rate'].apply(lambda x: f"{x:.1f}%")
-                        st.dataframe(worst_df, use_container_width=True)
-                        st.subheader("All Cards Used")
-                        all_df = df.copy()
-                        all_df['Win Rate'] = all_df['Win Rate'].apply(lambda x: f"{x:.1f}%")
-                        st.dataframe(all_df, use_container_width=True)
-                else:
-                    st.info("No battle data available for card analysis.")
-            with tab4:
-                st.header("📦 Upcoming Chests")
-                if chests and chests.get('items'):
-                    chest_items = chests['items']
-                    cols_per_row = 4
-                    for i in range(0, len(chest_items), cols_per_row):
-                        cols = st.columns(cols_per_row)
-                        for j, chest in enumerate(chest_items[i:i+cols_per_row]):
-                            with cols[j]:
-                                chest_name = chest.get('name', 'Unknown')
-                                index = chest.get('index', 0)
-                                emoji = "📦"
-                                if "Giant" in chest_name:
-                                    emoji = "🎁"
-                                elif "Magical" in chest_name:
-                                    emoji = "✨"
-                                elif "Legendary" in chest_name:
-                                    emoji = "👑"
-                                elif "Epic" in chest_name:
-                                    emoji = "💜"
-                                elif "Gold" in chest_name:
-                                    emoji = "💰"
-                                elif "Mega" in chest_name:
-                                    emoji = "⚡"
-                                st.markdown(f"### {emoji} +{index}")
-                                st.caption(chest_name)
-                else:
-                    st.info("Could not fetch upcoming chests.")
-            with tab5:
-                st.header("💡 Personalized Improvement Tips")
-                battle_stats = analyze_battles(battles) if battles else None
-                tips = get_improvement_tips(profile, battle_stats)
-                for i, tip in enumerate(tips, 1):
-                    st.info(f"**Tip {i}:** {tip}")
-                arena_id = profile.get('arena', {}).get('id', 1)
-                st.subheader("Arena-Specific Advice")
-                st.success(get_arena_tips(arena_id))
-                st.subheader("General Pro Tips")
-                pro_tips = ["**Elixir Management:** Never leak elixir! Always have a plan to spend it efficiently.", "**Card Counting:** Keep track of your opponent's cycle to predict their moves.", "**Patience:** Don't overcommit. Sometimes waiting for the right moment wins games.", "**Defense First:** A good defense often leads to a strong counter-push.", "**Learn Matchups:** Know which decks counter yours and play more carefully against them.", "**Watch Replays:** Analyze your losses to understand what went wrong.", "**Meta Awareness:** Keep up with balance changes and adjust your deck accordingly.", "**Placement Matters:** Small tile differences can change interactions dramatically."]
-                for tip in pro_tips:
-                    st.markdown(f"- {tip}")
-        except Exception as e:
-            st.error(f"Error displaying data: {str(e)}")
-
-if not demo_mode and not player_tag:
-    st.info("Enter a player tag above and click 'Analyze Player' to get started! Or toggle Demo Mode to see a sample analysis.")
+                    st.metric("Draws", battle_stats['draws'])
+                
+                if battle_stats['game_modes']:
+                    st.markdown("### Performance by Game Mode")
+                    mode_data = []
+                    for mode, stats in battle_stats['game_modes'].items():
+                        wr = (stats['wins'] / stats['plays'] * 100) if stats['plays'] > 0 else 0
+                        mode_data.append({'Game Mode': mode, 'Battles': stats['plays'], 'Wins': stats['wins'], 'Win Rate': f"{wr:.1f}%"})
+                    st.dataframe(pd.DataFrame(mode_data), use_container_width=True, hide_index=True)
+                
+                st.markdown("### Recent Battles")
+                for battle in battles[:10]:
+                    team = battle.get('team', [{}])[0]
+                    opponent = battle.get('opponent', [{}])[0]
+                    team_crowns = team.get('crowns', 0)
+                    opp_crowns = opponent.get('crowns', 0)
+                    
+                    if team_crowns > opp_crowns:
+                        result_class = "battle-win"
+                        result_text = "VICTORY"
+                        result_icon = "🏆"
+                    elif team_crowns < opp_crowns:
+                        result_class = "battle-loss"
+                        result_text = "DEFEAT"
+                        result_icon = "💀"
+                    else:
+                        result_class = "battle-draw"
+                        result_text = "DRAW"
+                        result_icon = "🤝"
+                    
+                    game_mode = battle.get('gameMode', {}).get('name', 'Unknown')
+                    
+                    st.markdown(f"""
+                    <div class="{result_class}">
+                        <strong>{result_icon} {result_text}</strong> vs {opponent.get('name', 'Unknown')} &nbsp;|&nbsp; 
+                        <strong>{team_crowns} - {opp_crowns}</strong> &nbsp;|&nbsp; {game_mode}
+                    </div>
+                    """, unsafe_allow_html=True)
+        else:
+            st.info("No recent battles found.")
     
-    with st.expander("Example Analysis Features"):
+    with tab3:
+        st.markdown("## Card Performance Analysis")
+        
+        if battles:
+            battle_stats = analyze_battles(battles)
+            
+            if battle_stats and battle_stats['cards_used']:
+                card_data = [{'Card': card_name, 'Times Used': stats['uses'], 'Wins': stats['wins'], 'Win Rate': (stats['wins'] / stats['uses'] * 100)} for card_name, stats in battle_stats['cards_used'].items() if stats['uses'] >= 1]
+                df = pd.DataFrame(card_data).sort_values('Win Rate', ascending=False)
+                
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.markdown("### Best Performing Cards")
+                    best_df = df.head(5).copy()
+                    best_df['Win Rate'] = best_df['Win Rate'].apply(lambda x: f"{x:.1f}%")
+                    st.dataframe(best_df, use_container_width=True, hide_index=True)
+                
+                with col2:
+                    st.markdown("### Needs Improvement")
+                    worst_df = df.tail(5).copy()
+                    worst_df['Win Rate'] = worst_df['Win Rate'].apply(lambda x: f"{x:.1f}%")
+                    st.dataframe(worst_df, use_container_width=True, hide_index=True)
+                
+                st.markdown("### All Cards Used")
+                all_df = df.copy()
+                all_df['Win Rate'] = all_df['Win Rate'].apply(lambda x: f"{x:.1f}%")
+                st.dataframe(all_df, use_container_width=True, hide_index=True)
+        else:
+            st.info("No battle data available for card analysis.")
+    
+    with tab4:
+        st.markdown("## Upcoming Chests")
+        
+        if chests and chests.get('items'):
+            chest_items = chests['items']
+            
+            cols = st.columns(4)
+            for i, chest in enumerate(chest_items[:8]):
+                with cols[i % 4]:
+                    chest_name = chest.get('name', 'Unknown')
+                    index = chest.get('index', 0)
+                    
+                    emoji = "📦"
+                    if "Giant" in chest_name:
+                        emoji = "🎁"
+                    elif "Magical" in chest_name:
+                        emoji = "✨"
+                    elif "Legendary" in chest_name:
+                        emoji = "👑"
+                    elif "Epic" in chest_name:
+                        emoji = "💜"
+                    elif "Gold" in chest_name:
+                        emoji = "💰"
+                    elif "Mega" in chest_name:
+                        emoji = "⚡"
+                    
+                    st.markdown(f"""
+                    <div class="chest-card">
+                        <div style="font-size: 2.5rem;">{emoji}</div>
+                        <div style="font-weight: 600; color: #fff; margin-top: 0.5rem;">{chest_name}</div>
+                        <div style="color: #667eea; font-size: 0.9rem;">+{index} chests away</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    st.write("")
+        else:
+            st.info("Could not fetch upcoming chests.")
+    
+    with tab5:
+        st.markdown("## Personalized Improvement Tips")
+        
+        battle_stats = analyze_battles(battles) if battles else None
+        tips = get_improvement_tips(profile, battle_stats)
+        
+        for i, tip in enumerate(tips, 1):
+            st.markdown(f"""
+            <div class="tip-card">
+                <strong>Tip {i}:</strong> {tip}
+            </div>
+            """, unsafe_allow_html=True)
+        
+        arena_id = profile.get('arena', {}).get('id', 1)
+        st.markdown("### Arena-Specific Advice")
+        st.markdown(f"""
+        <div class="arena-tip">
+            <strong>For your current arena:</strong><br>{get_arena_tips(arena_id)}
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("### Pro Tips from Top Players")
+        pro_tips = [
+            ("Elixir Management", "Never leak elixir! Always have a plan to spend it efficiently."),
+            ("Card Counting", "Keep track of your opponent's cycle to predict their moves."),
+            ("Patience Wins", "Don't overcommit. Sometimes waiting for the right moment wins games."),
+            ("Defense First", "A good defense often leads to a strong counter-push."),
+            ("Know Your Matchups", "Understand which decks counter yours and play carefully against them."),
+            ("Learn from Losses", "Watch your replays to understand what went wrong."),
+            ("Stay Meta-Aware", "Keep up with balance changes and adjust your deck accordingly."),
+            ("Placement Precision", "Small tile differences can change card interactions dramatically."),
+        ]
+        
+        cols = st.columns(2)
+        for i, (title, tip) in enumerate(pro_tips):
+            with cols[i % 2]:
+                st.markdown(f"""
+                <div class="pro-tip">
+                    <strong>{title}</strong><br>
+                    {tip}
+                </div>
+                """, unsafe_allow_html=True)
+
+if not profile and not demo_mode:
+    st.markdown("---")
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
         st.markdown("""
-        **What you'll get:**
-        - Complete player profile and statistics
-        - Recent battle analysis with win rates
-        - Card performance breakdown
-        - Upcoming chest schedule
-        - Personalized improvement tips based on your gameplay
-        - Arena-specific advice
-        """)
+        <div style="text-align: center; padding: 3rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); border-radius: 16px; border: 1px solid rgba(102, 126, 234, 0.2);">
+            <h3 style="color: #667eea;">Get Started</h3>
+            <p style="color: #a0a0a0;">Enter your player tag above to analyze your stats, or enable Demo Mode to explore the features.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 st.markdown("---")
-st.caption("Clash Royale Analyzer | Data from official Clash Royale API")
+st.markdown("""
+<div style="text-align: center; padding: 1rem; color: #666;">
+    <p>Clash Royale Analyzer | Powered by Official Clash Royale API</p>
+</div>
+""", unsafe_allow_html=True)
