@@ -634,7 +634,6 @@ st.markdown("""
 <div style="display: flex; justify-content: center; width: 100%;">
 <div class="main-header">
     <h1>⚔️ Clash Royale Analyzer</h1>
-    <p>Master your gameplay with AI-powered insights</p>
 </div>
 </div>
 """, unsafe_allow_html=True)
@@ -686,18 +685,13 @@ if demo_mode:
     chests = DEMO_CHESTS
 else:
     st.markdown("### 🔍 Search Player")
-    col1, col2 = st.columns([3.5, 0.8], gap="medium")
-    with col1:
-        player_tag = st.text_input(
-            "Player Tag",
-            placeholder="e.g., #ABC123 or ABC123",
-            help="Find your tag in your Clash Royale profile",
-            label_visibility="collapsed"
-        )
-    with col2:
-        st.write("")
-        st.write("")
-        analyze_btn = st.button("🔍 Search", type="primary", disabled=not player_tag or not st.session_state.get('api_token'), use_container_width=True)
+    player_tag = st.text_input(
+        "Player Tag",
+        placeholder="e.g., #ABC123 or ABC123",
+        help="Find your tag in your Clash Royale profile",
+        label_visibility="collapsed"
+    )
+    analyze_btn = st.button("🔍 Search", type="primary", disabled=not player_tag or not st.session_state.get('api_token'), use_container_width=True)
     
     if analyze_btn:
         if not st.session_state.get('api_token'):
