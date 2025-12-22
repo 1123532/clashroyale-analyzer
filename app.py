@@ -575,6 +575,11 @@ def get_improvement_tips(profile, battle_stats):
     
     return tips
 
+def get_card_image_url(card_name):
+    """Get card image URL from RoyaleAPI CDN"""
+    card_name_normalized = card_name.lower().replace(' ', '-').replace("'", '')
+    return f"https://cdn.royaleapi.com/cards/{card_name_normalized}.png"
+
 def get_arena_tips(arena_id):
     arena_tips = {
         1: "Focus on learning card interactions. Skeleton Army and Giant are great starting cards.",
@@ -765,11 +770,14 @@ if profile:
             deck_cols = st.columns(4)
             for i, card in enumerate(current_deck[:8]):
                 with deck_cols[i % 4]:
+                    card_name = card.get('name', 'Unknown')
+                    card_level = card.get('level', 1)
+                    image_url = get_card_image_url(card_name)
                     st.markdown(f"""
                     <div class="card-item">
-                        <div class="card-emoji">🃏</div>
-                        <div class="card-name">{card.get('name', 'Unknown')}</div>
-                        <div class="card-level">Level {card.get('level', 1)}</div>
+                        <img src="{image_url}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 12px; margin-bottom: 0.75rem;">
+                        <div class="card-name">{card_name}</div>
+                        <div class="card-level">Level {card_level}</div>
                     </div>
                     """, unsafe_allow_html=True)
     
