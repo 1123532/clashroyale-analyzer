@@ -629,37 +629,38 @@ DEMO_CHESTS = {
 
 st.markdown("""
 <div class="main-header">
-    <h1>Clash Royale Analyzer</h1>
-    <p>Analyze your stats and get personalized tips to dominate the arena</p>
+    <h1>⚔️ Clash Royale Analyzer</h1>
+    <p>Master your gameplay with AI-powered insights</p>
 </div>
 """, unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([1, 2, 1])
+col1, col2, col3 = st.columns([1, 1, 1])
 with col3:
-    demo_mode = st.toggle("Demo Mode", value=False, help="Try the analyzer with sample data")
+    demo_mode = st.toggle("📊 Demo", value=False, help="Try with sample data")
 
 with st.sidebar:
-    st.markdown("### Settings")
+    st.markdown("### ⚙️ Settings")
     if demo_mode:
-        st.info("Running in Demo Mode with sample data")
+        st.success("✨ Demo Mode Active")
     
     api_token = st.text_input(
-        "API Token",
+        "🔑 API Token",
         type="password",
-        help="Get your token from developer.clashroyale.com",
-        disabled=demo_mode
+        help="Get from developer.clashroyale.com",
+        disabled=demo_mode,
+        placeholder="Paste your token here..."
     )
     if api_token:
         st.session_state['api_token'] = api_token
     
     st.markdown("---")
     st.markdown("""
-    **How to get an API Token:**
-    1. Go to [developer.clashroyale.com](https://developer.clashroyale.com)
-    2. Sign in with your Supercell ID
-    3. Create a new API key
-    4. Whitelist IP: `45.79.218.79`
-    5. Copy the token here
+    ### 🚀 Quick Setup
+    
+    1. **Get Token** → [developer.clashroyale.com](https://developer.clashroyale.com)
+    2. **Sign in** with Supercell ID
+    3. **Create API key** & whitelist `45.79.218.79`
+    4. **Paste here** and search
     """)
 
 profile = None
@@ -670,36 +671,37 @@ if demo_mode:
     player_tag = "ProGamer2024"
     st.markdown("""
     <div class="demo-banner">
-        <p>Demo Preview: Showing sample player data. Explore the tabs below!</p>
+        <p>🎮 Demo Mode: Explore with sample player data from ProGamer2024</p>
     </div>
     """, unsafe_allow_html=True)
     profile = DEMO_PROFILE
     battles = DEMO_BATTLES
     chests = DEMO_CHESTS
 else:
-    col1, col2, col3 = st.columns([2, 1, 1])
+    st.markdown("### Search Player")
+    col1, col2 = st.columns([3, 1])
     with col1:
         player_tag = st.text_input(
-            "Enter Player Tag",
-            placeholder="#ABC123 or ABC123",
-            help="Your Clash Royale player tag (with or without #)"
+            "Player Tag",
+            placeholder="e.g., #ABC123 or ABC123",
+            help="Find your tag in your Clash Royale profile",
+            label_visibility="collapsed"
         )
     with col2:
         st.write("")
-        st.write("")
-        analyze_btn = st.button("Analyze Player", type="primary", disabled=not player_tag or not st.session_state.get('api_token'), use_container_width=True)
+        analyze_btn = st.button("🔍 Search", type="primary", disabled=not player_tag or not st.session_state.get('api_token'), use_container_width=True)
     
     if analyze_btn:
         if not st.session_state.get('api_token'):
-            st.error("Please enter your API token in the sidebar first.")
+            st.error("⚠️ Please add your API token in Settings first")
         else:
-            with st.spinner("Fetching player data..."):
+            with st.spinner("🔄 Loading..."):
                 profile = get_player_profile(player_tag)
                 battles = get_battle_log(player_tag)
                 chests = get_upcoming_chests(player_tag)
             
             if not profile:
-                st.error("Could not find player. Check the tag and API token, then try again.")
+                st.error("❌ Player not found. Check tag and API token.")
 
 if profile:
     if demo_mode:
