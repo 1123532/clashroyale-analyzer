@@ -165,15 +165,135 @@ def get_arena_tips(arena_id):
     }
     return arena_tips.get(arena_id, "Keep climbing! Study top ladder decks and adapt to the meta.")
 
+DEMO_PROFILE = {
+    'tag': '#2PP8Q8QJV',
+    'name': 'ProGamer2024',
+    'trophies': 7542,
+    'bestTrophies': 8123,
+    'expLevel': 13,
+    'wins': 2458,
+    'losses': 1823,
+    'threeCrownWins': 487,
+    'challengeMaxWins': 15,
+    'totalDonations': 8945,
+    'battleCount': 4281,
+    'arena': {'id': 9, 'name': 'Legendary Arena'},
+    'clan': {'tag': '#LYG82GQ8', 'name': 'Elite Dragons'},
+    'currentDeck': [
+        {'name': 'Hog Rider', 'level': 12},
+        {'name': 'Fireball', 'level': 13},
+        {'name': 'Knight', 'level': 13},
+        {'name': 'Ice Spirit', 'level': 13},
+        {'name': 'The Log', 'level': 5},
+        {'name': 'Skeletons', 'level': 13},
+        {'name': 'Bats', 'level': 13},
+        {'name': 'Inferno Dragon', 'level': 11}
+    ]
+}
+
+DEMO_BATTLES = [
+    {'team': [{'name': 'ProGamer2024', 'crowns': 3, 'cards': [
+        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
+        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
+    ]}], 'opponent': [{'name': 'Dredgen', 'crowns': 0, 'cards': [
+        {'name': 'Mega Knight'}, {'name': 'Tornado'}, {'name': 'Inferno Dragon'}, {'name': 'Goblins'},
+        {'name': 'Goblin Barrel'}, {'name': 'Princess'}, {'name': 'Archers'}, {'name': 'Valkyrie'}
+    ]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 2, 'cards': [
+        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
+        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
+    ]}], 'opponent': [{'name': 'XKillzX', 'crowns': 1, 'cards': [
+        {'name': 'P.E.K.K.A'}, {'name': 'Mirror'}, {'name': 'Minions'}, {'name': 'Arrows'},
+        {'name': 'Elixir Collector'}, {'name': 'Dark Prince'}, {'name': 'Giant'}, {'name': 'Musketeer'}
+    ]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 1, 'cards': [
+        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
+        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
+    ]}], 'opponent': [{'name': 'SkyKnight', 'crowns': 1, 'cards': [
+        {'name': 'Royal Giant'}, {'name': 'Clone'}, {'name': 'Rage'}, {'name': 'Goblins'},
+        {'name': 'Fire Spirits'}, {'name': 'Guards'}, {'name': 'Musketeer'}, {'name': 'Wizard'}
+    ]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 3, 'cards': [
+        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
+        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
+    ]}], 'opponent': [{'name': 'IceWizard99', 'crowns': 0, 'cards': [
+        {'name': 'Golem'}, {'name': 'Night Witch'}, {'name': 'Balloon'}, {'name': 'Arrows'},
+        {'name': 'Elixir Collector'}, {'name': 'Bomber'}, {'name': 'Skeletons'}, {'name': 'Tombstone'}
+    ]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 2, 'cards': [
+        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
+        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
+    ]}], 'opponent': [{'name': 'LavaLoon', 'crowns': 1, 'cards': [
+        {'name': 'Lava Hound'}, {'name': 'Balloon'}, {'name': 'Minions'}, {'name': 'Fire Spirits'},
+        {'name': 'Arrows'}, {'name': 'Guards'}, {'name': 'Barbarians'}, {'name': 'Furnace'}
+    ]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 3, 'cards': [
+        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
+        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
+    ]}], 'opponent': [{'name': 'MirrorMaster', 'crowns': 0, 'cards': [
+        {'name': 'Three Musketeers'}, {'name': 'Mirror'}, {'name': 'Clone'}, {'name': 'Fireball'},
+        {'name': 'Furnace'}, {'name': 'Inferno Tower'}, {'name': 'Minions'}, {'name': 'Bats'}
+    ]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 2, 'cards': [
+        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
+        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
+    ]}], 'opponent': [{'name': 'EGiant_User', 'crowns': 1, 'cards': [
+        {'name': 'Electro Giant'}, {'name': 'Rage'}, {'name': 'Clone'}, {'name': 'Heal Spirit'},
+        {'name': 'Guards'}, {'name': 'Goblins'}, {'name': 'Zap'}, {'name': 'Arrows'}
+    ]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 3, 'cards': [
+        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
+        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
+    ]}], 'opponent': [{'name': 'CrossbowTower', 'crowns': 0, 'cards': [
+        {'name': 'X-Bow'}, {'name': 'Inferno Tower'}, {'name': 'Fireball'}, {'name': 'Arrows'},
+        {'name': 'Barbarians'}, {'name': 'Knight'}, {'name': 'Elixir Collector'}, {'name': 'Tesla'}
+    ]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 2, 'cards': [
+        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
+        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
+    ]}], 'opponent': [{'name': 'GiantSkeleton', 'crowns': 0, 'cards': [
+        {'name': 'Giant Skeleton'}, {'name': 'Poison'}, {'name': 'Minion Horde'}, {'name': 'Barbarians'},
+        {'name': 'Goblins'}, {'name': 'Arrows'}, {'name': 'Bats'}, {'name': 'Tombstone'}
+    ]}], 'gameMode': {'name': 'Ladder'}},
+    {'team': [{'name': 'ProGamer2024', 'crowns': 3, 'cards': [
+        {'name': 'Hog Rider'}, {'name': 'Fireball'}, {'name': 'Knight'}, {'name': 'Ice Spirit'},
+        {'name': 'The Log'}, {'name': 'Skeletons'}, {'name': 'Bats'}, {'name': 'Inferno Dragon'}
+    ]}], 'opponent': [{'name': 'SkeletonKing', 'crowns': 0, 'cards': [
+        {'name': 'Skeleton King'}, {'name': 'Arrows'}, {'name': 'Goblins'}, {'name': 'Fire Spirits'},
+        {'name': 'Knight'}, {'name': 'Barbarians'}, {'name': 'Minions'}, {'name': 'Valkyrie'}
+    ]}], 'gameMode': {'name': 'Ladder'}},
+]
+
+DEMO_CHESTS = {
+    'items': [
+        {'name': 'Gold Chest', 'index': 0},
+        {'name': 'Golden Chest', 'index': 1},
+        {'name': 'Silver Chest', 'index': 2},
+        {'name': 'Gold Chest', 'index': 3},
+        {'name': 'Magical Chest', 'index': 4},
+        {'name': 'Gold Chest', 'index': 5},
+        {'name': 'Epic Chest', 'index': 6},
+        {'name': 'Gold Chest', 'index': 7},
+    ]
+}
+
 st.title("⚔️ Clash Royale Player Analyzer")
 st.markdown("Analyze your stats and get personalized tips to improve your gameplay!")
 
+col1, col2 = st.columns([0.85, 0.15])
+with col2:
+    demo_mode = st.toggle("🎮 Demo Mode", value=False, help="Try the analyzer with sample data")
+
 with st.sidebar:
     st.header("Settings")
+    if demo_mode:
+        st.info("📌 Running in **Demo Mode** with sample data")
+    
     api_token = st.text_input(
         "API Token",
         type="password",
-        help="Get your token from developer.clashroyale.com"
+        help="Get your token from developer.clashroyale.com",
+        disabled=demo_mode
     )
     if api_token:
         st.session_state['api_token'] = api_token
@@ -188,13 +308,23 @@ with st.sidebar:
     5. Copy the token here
     """)
 
-player_tag = st.text_input(
-    "Enter Player Tag",
-    placeholder="#ABC123 or ABC123",
-    help="Your Clash Royale player tag (with or without #)"
-)
+if demo_mode:
+    player_tag = "ProGamer2024"
+    col1, col2 = st.columns([0.85, 0.15])
+    with col1:
+        st.info("👁️ **Demo Preview:** Showing sample player data. Try the 5 analysis tabs below!")
+else:
+    player_tag = st.text_input(
+        "Enter Player Tag",
+        placeholder="#ABC123 or ABC123",
+        help="Your Clash Royale player tag (with or without #)"
+    )
 
-if st.button("Analyze Player", type="primary", disabled=not player_tag or not st.session_state.get('api_token')):
+if demo_mode:
+    profile = DEMO_PROFILE
+    battles = DEMO_BATTLES
+    chests = DEMO_CHESTS
+elif st.button("Analyze Player", type="primary", disabled=not player_tag or not st.session_state.get('api_token')):
     if not st.session_state.get('api_token'):
         st.error("Please enter your API token in the sidebar first.")
     else:
@@ -206,15 +336,31 @@ if st.button("Analyze Player", type="primary", disabled=not player_tag or not st
         if not profile:
             st.error("Could not find player. Check the tag and API token, then try again.")
         else:
+            profile = profile
+
+if demo_mode or (not demo_mode and st.session_state.get('profile_loaded')):
+    if 'profile_loaded' not in st.session_state:
+        st.session_state['profile_loaded'] = False
+    
+    if demo_mode or st.session_state.get('profile_loaded'):
+        if profile and not demo_mode:
             st.success(f"Found player: **{profile.get('name', 'Unknown')}**")
-            
-            tab1, tab2, tab3, tab4, tab5 = st.tabs([
-                "Profile", "Battle Stats", "Card Analysis", "Upcoming Chests", "Improvement Tips"
-            ])
-            
+
+if demo_mode or profile:
+    if not demo_mode:
+        st.session_state['profile_loaded'] = True
+        st.success(f"Found player: **{profile.get('name', 'Unknown')}**")
+    else:
+        st.success(f"Demo Account: **{profile.get('name', 'Unknown')}** (Sample Data)")
+    
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+        "Profile", "Battle Stats", "Card Analysis", "Upcoming Chests", "Improvement Tips"
+    ])
+    
+    if profile:
+        try:
             with tab1:
                 st.header(f"👤 {profile.get('name', 'Unknown')}")
-                
                 col1, col2, col3, col4 = st.columns(4)
                 with col1:
                     st.metric("Trophies", f"🏆 {profile.get('trophies', 0)}")
@@ -225,7 +371,6 @@ if st.button("Analyze Player", type="primary", disabled=not player_tag or not st
                 with col4:
                     arena = profile.get('arena', {})
                     st.metric("Arena", arena.get('name', 'Unknown'))
-                
                 st.subheader("Battle Record")
                 col1, col2, col3, col4 = st.columns(4)
                 wins = profile.get('wins', 0)
@@ -239,7 +384,6 @@ if st.button("Analyze Player", type="primary", disabled=not player_tag or not st
                 with col4:
                     winrate = (wins / (wins + losses) * 100) if (wins + losses) > 0 else 0
                     st.metric("Win Rate", f"{winrate:.1f}%")
-                
                 st.subheader("Achievements")
                 col1, col2, col3 = st.columns(3)
                 with col1:
@@ -248,12 +392,10 @@ if st.button("Analyze Player", type="primary", disabled=not player_tag or not st
                     st.metric("Challenge Max Wins", profile.get('challengeMaxWins', 0))
                 with col3:
                     st.metric("Cards Found", f"{profile.get('totalDonations', 0)} donated")
-                
                 clan = profile.get('clan')
                 if clan:
                     st.subheader("Clan")
                     st.info(f"**{clan.get('name', 'Unknown')}** (Tag: {clan.get('tag', 'N/A')})")
-                
                 current_deck = profile.get('currentDeck', [])
                 if current_deck:
                     st.subheader("Current Deck")
@@ -262,13 +404,10 @@ if st.button("Analyze Player", type="primary", disabled=not player_tag or not st
                         with deck_cols[i]:
                             st.markdown(f"**{card.get('name', 'Unknown')}**")
                             st.caption(f"Lvl {card.get('level', 1)}")
-            
             with tab2:
                 st.header("📊 Recent Battle Analysis")
-                
                 if battles:
                     battle_stats = analyze_battles(battles)
-                    
                     if battle_stats:
                         col1, col2, col3, col4 = st.columns(4)
                         with col1:
@@ -280,95 +419,56 @@ if st.button("Analyze Player", type="primary", disabled=not player_tag or not st
                         with col4:
                             recent_wr = (battle_stats['wins'] / battle_stats['total_battles'] * 100) if battle_stats['total_battles'] > 0 else 0
                             st.metric("Recent Win Rate", f"{recent_wr:.1f}%")
-                        
                         col1, col2 = st.columns(2)
                         with col1:
                             st.metric("Crowns Earned", f"👑 {battle_stats['crowns_earned']}")
                         with col2:
                             st.metric("Crowns Given Up", f"💀 {battle_stats['crowns_given']}")
-                        
                         if battle_stats['game_modes']:
                             st.subheader("Performance by Game Mode")
                             mode_data = []
                             for mode, stats in battle_stats['game_modes'].items():
                                 wr = (stats['wins'] / stats['plays'] * 100) if stats['plays'] > 0 else 0
-                                mode_data.append({
-                                    'Game Mode': mode,
-                                    'Battles': stats['plays'],
-                                    'Wins': stats['wins'],
-                                    'Win Rate': f"{wr:.1f}%"
-                                })
+                                mode_data.append({'Game Mode': mode, 'Battles': stats['plays'], 'Wins': stats['wins'], 'Win Rate': f"{wr:.1f}%"})
                             st.dataframe(pd.DataFrame(mode_data), use_container_width=True)
-                        
                         st.subheader("Recent Battles")
-                        for i, battle in enumerate(battles[:10]):
+                        for battle in battles[:10]:
                             team = battle.get('team', [{}])[0]
                             opponent = battle.get('opponent', [{}])[0]
                             team_crowns = team.get('crowns', 0)
                             opp_crowns = opponent.get('crowns', 0)
-                            
-                            if team_crowns > opp_crowns:
-                                result = "✅ WIN"
-                                color = "green"
-                            elif team_crowns < opp_crowns:
-                                result = "❌ LOSS"
-                                color = "red"
-                            else:
-                                result = "🤝 DRAW"
-                                color = "gray"
-                            
+                            result = "✅ WIN" if team_crowns > opp_crowns else ("❌ LOSS" if team_crowns < opp_crowns else "🤝 DRAW")
                             game_mode = battle.get('gameMode', {}).get('name', 'Unknown')
-                            
                             with st.expander(f"{result} vs {opponent.get('name', 'Unknown')} ({team_crowns}-{opp_crowns}) - {game_mode}"):
                                 st.write(f"**Your Deck:** {', '.join([c.get('name', '?') for c in team.get('cards', [])])}")
                                 st.write(f"**Opponent Deck:** {', '.join([c.get('name', '?') for c in opponent.get('cards', [])])}")
                 else:
                     st.info("No recent battles found.")
-            
             with tab3:
                 st.header("🃏 Card Performance Analysis")
-                
                 if battles:
                     battle_stats = analyze_battles(battles)
-                    
                     if battle_stats and battle_stats['cards_used']:
-                        card_data = []
-                        for card_name, stats in battle_stats['cards_used'].items():
-                            if stats['uses'] >= 1:
-                                wr = (stats['wins'] / stats['uses'] * 100)
-                                card_data.append({
-                                    'Card': card_name,
-                                    'Times Used': stats['uses'],
-                                    'Wins': stats['wins'],
-                                    'Win Rate': wr
-                                })
-                        
-                        df = pd.DataFrame(card_data)
-                        df = df.sort_values('Win Rate', ascending=False)
-                        
+                        card_data = [{'Card': card_name, 'Times Used': stats['uses'], 'Wins': stats['wins'], 'Win Rate': (stats['wins'] / stats['uses'] * 100)} for card_name, stats in battle_stats['cards_used'].items() if stats['uses'] >= 1]
+                        df = pd.DataFrame(card_data).sort_values('Win Rate', ascending=False)
                         st.subheader("Best Performing Cards")
                         best_df = df.head(5).copy()
                         best_df['Win Rate'] = best_df['Win Rate'].apply(lambda x: f"{x:.1f}%")
                         st.dataframe(best_df, use_container_width=True)
-                        
                         st.subheader("Worst Performing Cards")
                         worst_df = df.tail(5).copy()
                         worst_df['Win Rate'] = worst_df['Win Rate'].apply(lambda x: f"{x:.1f}%")
                         st.dataframe(worst_df, use_container_width=True)
-                        
                         st.subheader("All Cards Used")
                         all_df = df.copy()
                         all_df['Win Rate'] = all_df['Win Rate'].apply(lambda x: f"{x:.1f}%")
                         st.dataframe(all_df, use_container_width=True)
                 else:
                     st.info("No battle data available for card analysis.")
-            
             with tab4:
                 st.header("📦 Upcoming Chests")
-                
                 if chests and chests.get('items'):
                     chest_items = chests['items']
-                    
                     cols_per_row = 4
                     for i in range(0, len(chest_items), cols_per_row):
                         cols = st.columns(cols_per_row)
@@ -376,7 +476,6 @@ if st.button("Analyze Player", type="primary", disabled=not player_tag or not st
                             with cols[j]:
                                 chest_name = chest.get('name', 'Unknown')
                                 index = chest.get('index', 0)
-                                
                                 emoji = "📦"
                                 if "Giant" in chest_name:
                                     emoji = "🎁"
@@ -390,42 +489,28 @@ if st.button("Analyze Player", type="primary", disabled=not player_tag or not st
                                     emoji = "💰"
                                 elif "Mega" in chest_name:
                                     emoji = "⚡"
-                                
                                 st.markdown(f"### {emoji} +{index}")
                                 st.caption(chest_name)
                 else:
                     st.info("Could not fetch upcoming chests.")
-            
             with tab5:
                 st.header("💡 Personalized Improvement Tips")
-                
                 battle_stats = analyze_battles(battles) if battles else None
                 tips = get_improvement_tips(profile, battle_stats)
-                
                 for i, tip in enumerate(tips, 1):
                     st.info(f"**Tip {i}:** {tip}")
-                
                 arena_id = profile.get('arena', {}).get('id', 1)
                 st.subheader("Arena-Specific Advice")
                 st.success(get_arena_tips(arena_id))
-                
                 st.subheader("General Pro Tips")
-                pro_tips = [
-                    "**Elixir Management:** Never leak elixir! Always have a plan to spend it efficiently.",
-                    "**Card Counting:** Keep track of your opponent's cycle to predict their moves.",
-                    "**Patience:** Don't overcommit. Sometimes waiting for the right moment wins games.",
-                    "**Defense First:** A good defense often leads to a strong counter-push.",
-                    "**Learn Matchups:** Know which decks counter yours and play more carefully against them.",
-                    "**Watch Replays:** Analyze your losses to understand what went wrong.",
-                    "**Meta Awareness:** Keep up with balance changes and adjust your deck accordingly.",
-                    "**Placement Matters:** Small tile differences can change interactions dramatically."
-                ]
-                
+                pro_tips = ["**Elixir Management:** Never leak elixir! Always have a plan to spend it efficiently.", "**Card Counting:** Keep track of your opponent's cycle to predict their moves.", "**Patience:** Don't overcommit. Sometimes waiting for the right moment wins games.", "**Defense First:** A good defense often leads to a strong counter-push.", "**Learn Matchups:** Know which decks counter yours and play more carefully against them.", "**Watch Replays:** Analyze your losses to understand what went wrong.", "**Meta Awareness:** Keep up with balance changes and adjust your deck accordingly.", "**Placement Matters:** Small tile differences can change interactions dramatically."]
                 for tip in pro_tips:
                     st.markdown(f"- {tip}")
+        except Exception as e:
+            st.error(f"Error displaying data: {str(e)}")
 
-if not player_tag:
-    st.info("Enter a player tag above and click 'Analyze Player' to get started!")
+if not demo_mode and not player_tag:
+    st.info("Enter a player tag above and click 'Analyze Player' to get started! Or toggle Demo Mode to see a sample analysis.")
     
     with st.expander("Example Analysis Features"):
         st.markdown("""
