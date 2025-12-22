@@ -15,242 +15,401 @@ st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
     
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes glow {
+        0%, 100% { box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3), inset 0 1px 0 rgba(255,255,255,0.1); }
+        50% { box-shadow: 0 10px 50px rgba(102, 126, 234, 0.5), inset 0 1px 0 rgba(255,255,255,0.15); }
+    }
+    
+    @keyframes shimmer {
+        0% { background-position: -1000px 0; }
+        100% { background-position: 1000px 0; }
+    }
+    
     .stApp {
         font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
     }
     
     .main-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 2rem 2rem;
-        border-radius: 16px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #5a4a96 100%);
+        padding: 2.5rem 2.5rem;
+        border-radius: 24px;
         margin-bottom: 2rem;
         text-align: center;
-        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.1);
+        animation: glow 3s ease-in-out infinite;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .main-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        animation: shimmer 3s infinite;
     }
     
     .main-header h1 {
         color: white;
-        font-size: 2.5rem;
+        font-size: 2.8rem;
         font-weight: 800;
         margin: 0;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        text-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 40px rgba(102, 126, 234, 0.2);
+        letter-spacing: -1px;
+        position: relative;
+        z-index: 1;
     }
     
     .main-header p {
-        color: rgba(255,255,255,0.9);
-        font-size: 1.1rem;
-        margin-top: 0.5rem;
+        color: rgba(255,255,255,0.95);
+        font-size: 1.15rem;
+        margin-top: 0.75rem;
+        font-weight: 500;
+        position: relative;
+        z-index: 1;
     }
     
     .stat-card {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        border-radius: 16px;
-        padding: 1.5rem;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f1629 100%);
+        border-radius: 20px;
+        padding: 2rem 1.5rem;
         text-align: center;
-        border: 1px solid rgba(255,255,255,0.1);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+        backdrop-filter: blur(10px);
+        cursor: pointer;
     }
     
     .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 15px 50px rgba(102, 126, 234, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+        border-color: rgba(102, 126, 234, 0.6);
     }
     
     .stat-value {
-        font-size: 2rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #667eea, #764ba2);
+        font-size: 2.2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+        letter-spacing: -1px;
     }
     
     .stat-label {
-        color: #a0a0a0;
-        font-size: 0.85rem;
+        color: #8a8aaa;
+        font-size: 0.8rem;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-top: 0.5rem;
+        letter-spacing: 1.5px;
+        margin-top: 0.75rem;
+        font-weight: 600;
     }
     
     .section-header {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
         font-weight: 700;
-        color: #667eea;
-        margin: 2rem 0 1rem 0;
-        padding-bottom: 0.5rem;
-        border-bottom: 3px solid #667eea;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 2.5rem 0 1.25rem 0;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid rgba(102, 126, 234, 0.4);
+        letter-spacing: -0.5px;
     }
     
     .card-item {
-        background: linear-gradient(135deg, #1f1f3d 0%, #2d2d5a 100%);
-        border-radius: 12px;
-        padding: 1rem;
+        background: linear-gradient(135deg, #1f1f3d 0%, #2d2d5a 50%, #252547 100%);
+        border-radius: 16px;
+        padding: 1.25rem;
         text-align: center;
-        border: 1px solid rgba(102, 126, 234, 0.3);
+        border: 1px solid rgba(102, 126, 234, 0.4);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+        transition: all 0.3s ease;
+        backdrop-filter: blur(8px);
+    }
+    
+    .card-item:hover {
+        transform: translateY(-4px);
+        border-color: rgba(102, 126, 234, 0.6);
+        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25), inset 0 1px 0 rgba(255,255,255,0.1);
     }
     
     .card-name {
-        font-weight: 600;
+        font-weight: 700;
         color: #fff;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
+        letter-spacing: -0.3px;
     }
     
     .card-level {
         color: #667eea;
         font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 0.4rem;
     }
     
     .battle-win {
-        background: linear-gradient(135deg, rgba(46, 204, 113, 0.2) 0%, rgba(39, 174, 96, 0.2) 100%);
-        border-left: 4px solid #2ecc71;
-        border-radius: 8px;
-        padding: 1rem;
-        margin: 0.5rem 0;
+        background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(39, 174, 96, 0.1) 100%);
+        border-left: 5px solid #2ecc71;
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin: 0.75rem 0;
+        box-shadow: 0 4px 12px rgba(46, 204, 113, 0.15);
+        border: 1px solid rgba(46, 204, 113, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .battle-win:hover {
+        box-shadow: 0 6px 20px rgba(46, 204, 113, 0.25);
+        transform: translateX(4px);
     }
     
     .battle-loss {
-        background: linear-gradient(135deg, rgba(231, 76, 60, 0.2) 0%, rgba(192, 57, 43, 0.2) 100%);
-        border-left: 4px solid #e74c3c;
-        border-radius: 8px;
-        padding: 1rem;
-        margin: 0.5rem 0;
+        background: linear-gradient(135deg, rgba(231, 76, 60, 0.15) 0%, rgba(192, 57, 43, 0.1) 100%);
+        border-left: 5px solid #e74c3c;
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin: 0.75rem 0;
+        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.15);
+        border: 1px solid rgba(231, 76, 60, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .battle-loss:hover {
+        box-shadow: 0 6px 20px rgba(231, 76, 60, 0.25);
+        transform: translateX(4px);
     }
     
     .battle-draw {
-        background: linear-gradient(135deg, rgba(149, 165, 166, 0.2) 0%, rgba(127, 140, 141, 0.2) 100%);
-        border-left: 4px solid #95a5a6;
-        border-radius: 8px;
-        padding: 1rem;
-        margin: 0.5rem 0;
+        background: linear-gradient(135deg, rgba(149, 165, 166, 0.15) 0%, rgba(127, 140, 141, 0.1) 100%);
+        border-left: 5px solid #95a5a6;
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin: 0.75rem 0;
+        box-shadow: 0 4px 12px rgba(149, 165, 166, 0.15);
+        border: 1px solid rgba(149, 165, 166, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .battle-draw:hover {
+        box-shadow: 0 6px 20px rgba(149, 165, 166, 0.25);
+        transform: translateX(4px);
     }
     
     .tip-card {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-        border-left: 4px solid #667eea;
-        border-radius: 8px;
-        padding: 1.2rem;
-        margin: 0.8rem 0;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.1) 100%);
+        border-left: 5px solid #667eea;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .tip-card:hover {
+        box-shadow: 0 6px 24px rgba(102, 126, 234, 0.25);
+        transform: translateX(4px);
+        border-color: rgba(102, 126, 234, 0.5);
     }
     
     .chest-card {
-        background: linear-gradient(135deg, #2d2d5a 0%, #1f1f3d 100%);
-        border-radius: 12px;
-        padding: 1.2rem;
+        background: linear-gradient(135deg, #2d2d5a 0%, #1f1f3d 50%, #252547 100%);
+        border-radius: 18px;
+        padding: 1.5rem;
         text-align: center;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        transition: transform 0.3s ease;
+        border: 1px solid rgba(255, 215, 0, 0.4);
+        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+        cursor: pointer;
     }
     
     .chest-card:hover {
-        transform: scale(1.05);
+        transform: translateY(-6px) scale(1.08);
+        border-color: rgba(255, 215, 0, 0.6);
+        box-shadow: 0 12px 32px rgba(255, 215, 0, 0.2);
     }
     
     .demo-banner {
-        background: linear-gradient(135deg, #f39c12 0%, #e74c3c 100%);
-        padding: 1rem;
-        border-radius: 12px;
+        background: linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #e74c3c 100%);
+        padding: 1.25rem 1.5rem;
+        border-radius: 16px;
         text-align: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 24px rgba(243, 156, 18, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        animation: glow 3s ease-in-out infinite;
     }
     
     .demo-banner p {
         color: white;
-        font-weight: 600;
+        font-weight: 700;
         margin: 0;
+        font-size: 1.05rem;
+        letter-spacing: 0.3px;
     }
     
     .clan-badge {
-        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-        padding: 1rem 1.5rem;
-        border-radius: 12px;
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 50%, #21618c 100%);
+        padding: 1.25rem 2rem;
+        border-radius: 16px;
         display: inline-block;
+        box-shadow: 0 8px 24px rgba(52, 152, 219, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .clan-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(52, 152, 219, 0.4);
     }
     
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background: rgba(26, 26, 46, 0.5);
-        padding: 0.5rem;
-        border-radius: 12px;
+        gap: 10px;
+        background: rgba(26, 26, 46, 0.6);
+        padding: 0.6rem;
+        border-radius: 14px;
+        border: 1px solid rgba(102, 126, 234, 0.2);
+        backdrop-filter: blur(10px);
     }
     
     .stTabs [data-baseweb="tab"] {
         background: transparent;
-        border-radius: 8px;
-        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        padding: 0.85rem 1.75rem;
         font-weight: 600;
+        transition: all 0.3s ease;
+        color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .stTabs [data-baseweb="tab"]:hover {
+        background: rgba(102, 126, 234, 0.1);
+        color: #fff;
     }
     
     .stTabs [aria-selected="true"] {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
     
     div[data-testid="stMetric"] {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        border-radius: 12px;
-        padding: 1rem;
-        border: 1px solid rgba(102, 126, 234, 0.2);
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f1629 100%);
+        border-radius: 18px;
+        padding: 1.5rem;
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+        transition: all 0.3s ease;
+    }
+    
+    div[data-testid="stMetric"]:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2), inset 0 1px 0 rgba(255,255,255,0.1);
     }
     
     div[data-testid="stMetric"] label {
-        color: #a0a0a0;
+        color: #8a8aaa;
+        font-weight: 600;
+        font-size: 0.85rem;
     }
     
     div[data-testid="stMetric"] [data-testid="stMetricValue"] {
         background: linear-gradient(135deg, #667eea, #764ba2);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-weight: 700;
+        font-weight: 800;
+        letter-spacing: -0.5px;
     }
     
     .stDataFrame {
-        border-radius: 12px;
+        border-radius: 16px;
         overflow: hidden;
+        border: 1px solid rgba(102, 126, 234, 0.2) !important;
     }
     
     .stExpander {
-        background: rgba(26, 26, 46, 0.5);
-        border-radius: 12px;
-        border: 1px solid rgba(102, 126, 234, 0.2);
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.7) 0%, rgba(22, 33, 62, 0.7) 100%);
+        border-radius: 14px;
+        border: 1px solid rgba(102, 126, 234, 0.2) !important;
+        transition: all 0.3s ease;
+    }
+    
+    .stExpander:hover {
+        border-color: rgba(102, 126, 234, 0.4) !important;
     }
     
     .pro-tip {
-        background: rgba(46, 204, 113, 0.1);
-        border-left: 4px solid #2ecc71;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 0.5rem 0;
+        background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(39, 174, 96, 0.1) 100%);
+        border-left: 5px solid #2ecc71;
+        padding: 1.25rem;
+        border-radius: 12px;
+        margin: 0.75rem 0;
+        box-shadow: 0 4px 12px rgba(46, 204, 113, 0.15);
+        border: 1px solid rgba(46, 204, 113, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .pro-tip:hover {
+        box-shadow: 0 6px 20px rgba(46, 204, 113, 0.25);
+        transform: translateX(4px);
     }
     
     .arena-tip {
-        background: linear-gradient(135deg, rgba(241, 196, 15, 0.15) 0%, rgba(243, 156, 18, 0.15) 100%);
-        border: 1px solid rgba(241, 196, 15, 0.3);
-        border-radius: 12px;
-        padding: 1.5rem;
+        background: linear-gradient(135deg, rgba(241, 196, 15, 0.2) 0%, rgba(243, 156, 18, 0.15) 100%);
+        border: 1px solid rgba(241, 196, 15, 0.4);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 6px 20px rgba(241, 196, 15, 0.15);
+        transition: all 0.3s ease;
+    }
+    
+    .arena-tip:hover {
+        box-shadow: 0 10px 30px rgba(241, 196, 15, 0.25);
+        transform: translateY(-3px);
     }
     
     .input-section {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        padding: 2rem;
-        border-radius: 16px;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f1629 100%);
+        padding: 2.5rem;
+        border-radius: 20px;
         margin-bottom: 2rem;
-        border: 1px solid rgba(102, 126, 234, 0.2);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
     }
     
     .stButton > button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
-        padding: 0.75rem 2rem;
-        font-weight: 600;
-        border-radius: 8px;
-        transition: all 0.3s ease;
+        padding: 0.9rem 2.5rem;
+        font-weight: 700;
+        border-radius: 12px;
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        letter-spacing: 0.3px;
+        cursor: pointer;
     }
     
     .stButton > button:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
+    }
+    
+    .stButton > button:active {
         transform: translateY(-2px);
-        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
     }
     
     .toggle-container {
