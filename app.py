@@ -132,34 +132,41 @@ st.markdown("""
     }
     
     .card-item {
-        background: linear-gradient(135deg, #1f1f3d 0%, #2d2d5a 50%, #252547 100%);
-        border-radius: 16px;
-        padding: 1.25rem;
+        background: linear-gradient(135deg, #2d1b4e 0%, #1f1f3d 50%, #16213e 100%);
+        border-radius: 18px;
+        padding: 1.75rem 1.5rem;
         text-align: center;
-        border: 1px solid rgba(102, 126, 234, 0.4);
-        box-shadow: 0 4px 16px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
-        transition: all 0.3s ease;
-        backdrop-filter: blur(8px);
+        border: 2px solid rgba(102, 126, 234, 0.5);
+        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2), inset 0 1px 0 rgba(255,255,255,0.08);
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+        backdrop-filter: blur(10px);
+        cursor: pointer;
     }
     
     .card-item:hover {
-        transform: translateY(-4px);
-        border-color: rgba(102, 126, 234, 0.6);
-        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+        transform: translateY(-8px) scale(1.05);
+        border-color: rgba(102, 126, 234, 0.8);
+        box-shadow: 0 16px 48px rgba(102, 126, 234, 0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+    
+    .card-emoji {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
     }
     
     .card-name {
-        font-weight: 700;
+        font-weight: 800;
         color: #fff;
-        font-size: 0.95rem;
+        font-size: 1.05rem;
         letter-spacing: -0.3px;
+        margin-bottom: 0.5rem;
     }
     
     .card-level {
-        color: #667eea;
-        font-size: 0.8rem;
-        font-weight: 600;
-        margin-top: 0.4rem;
+        color: #a0d9ff;
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
     }
     
     .battle-win {
@@ -753,14 +760,16 @@ if profile:
         
         current_deck = profile.get('currentDeck', [])
         if current_deck:
-            st.markdown("### Current Deck")
-            deck_cols = st.columns(8)
+            st.markdown("<div style='margin-top: 2.5rem;'></div>", unsafe_allow_html=True)
+            st.markdown("### 🎴 Current Deck")
+            deck_cols = st.columns(4)
             for i, card in enumerate(current_deck[:8]):
-                with deck_cols[i]:
+                with deck_cols[i % 4]:
                     st.markdown(f"""
                     <div class="card-item">
+                        <div class="card-emoji">🃏</div>
                         <div class="card-name">{card.get('name', 'Unknown')}</div>
-                        <div class="card-level">Lvl {card.get('level', 1)}</div>
+                        <div class="card-level">Level {card.get('level', 1)}</div>
                     </div>
                     """, unsafe_allow_html=True)
     
