@@ -1,692 +1,793 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clash Royale Analyzer - Player Stats & Improvement Tips</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
-            min-height: 100vh;
-            color: #fff;
-            overflow-x: hidden;
-        }
-        
-        .noise {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        .glow-orb {
-            position: fixed;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.15;
-            z-index: 0;
-        }
-        
-        .glow-1 {
-            background: #667eea;
-            top: -200px;
-            right: -200px;
-            animation: floatOrb 15s ease-in-out infinite;
-        }
-        
-        .glow-2 {
-            background: #764ba2;
-            bottom: -200px;
-            left: -200px;
-            animation: floatOrb 20s ease-in-out infinite reverse;
-        }
-        
-        @keyframes floatOrb {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(40px, -20px); }
-            50% { transform: translate(0, 40px); }
-            75% { transform: translate(-30px, 10px); }
-        }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes shine {
-            0% { background-position: -1000px 0; }
-            100% { background-position: 1000px 0; }
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 0;
-        }
-        
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-        
-        .nav-links a {
-            color: rgba(255,255,255,0.7);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        .nav-links a:hover {
-            color: #667eea;
-        }
-        
-        .hero {
-            text-align: center;
-            padding: 8rem 2rem 6rem;
-        }
-        
-        .badge {
-            display: inline-block;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.25) 0%, rgba(118, 75, 162, 0.15) 100%);
-            border: 1px solid rgba(102, 126, 234, 0.5);
-            padding: 0.7rem 2rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            color: #667eea;
-            margin-bottom: 2rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        
-        .hero h1 {
-            font-size: 4.5rem;
-            font-weight: 900;
-            line-height: 1.05;
-            margin-bottom: 1.25rem;
-            background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -2px;
-        }
-        
-        .hero p {
-            font-size: 1.3rem;
-            color: rgba(255,255,255,0.65);
-            max-width: 650px;
-            margin: 0 auto 3rem;
-            line-height: 1.7;
-            font-weight: 500;
-        }
-        
-        .btn-group {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 1rem 2.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #5a4a96 100%);
-            color: white;
-            box-shadow: 0 12px 36px rgba(102, 126, 234, 0.5);
-            font-weight: 700;
-            letter-spacing: 0.3px;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 18px 50px rgba(102, 126, 234, 0.6);
-        }
-        
-        .btn-primary:active {
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: 2px solid rgba(255,255,255,0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.5);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
-        }
-        
-        .features {
-            padding: 6rem 0;
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-        
-        .section-title h2 {
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-            letter-spacing: -1px;
-        }
-        
-        .section-title p {
-            color: rgba(255,255,255,0.65);
-            font-size: 1.15rem;
-            font-weight: 500;
-        }
-        
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .feature-card {
-            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.9) 50%, rgba(15, 22, 41, 0.9) 100%);
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            border-radius: 24px;
-            padding: 2.5rem;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-12px);
-            border-color: rgba(102, 126, 234, 0.6);
-            box-shadow: 0 24px 56px rgba(102, 126, 234, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
-        }
-        
-        .feature-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin-bottom: 1.75rem;
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
-        }
-        
-        .feature-card h3 {
-            font-size: 1.3rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            letter-spacing: -0.3px;
-        }
-        
-        .feature-card p {
-            color: rgba(255,255,255,0.65);
-            line-height: 1.7;
-            font-weight: 500;
-        }
-        
-        .how-it-works {
-            padding: 6rem 0;
-        }
-        
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        
-        .step {
-            text-align: center;
-            padding: 2rem;
-        }
-        
-        .step-number {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 0 auto 1.5rem;
-        }
-        
-        .step h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-        
-        .step p {
-            color: rgba(255,255,255,0.6);
-            line-height: 1.6;
-        }
-        
-        .stats-section {
-            padding: 6rem 0;
-            text-align: center;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        
-        .stat-item {
-            background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%);
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            border-radius: 20px;
-            padding: 2rem;
-        }
-        
-        .stat-value {
-            font-size: 3.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
-        }
-        
-        .stat-label {
-            color: rgba(255,255,255,0.65);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            margin-top: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .tech-stack {
-            padding: 4rem 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .tech-grid {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            flex-wrap: wrap;
-        }
-        
-        .tech-item {
-            text-align: center;
-            padding: 1rem 2rem;
-        }
-        
-        .tech-item span {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-        
-        .tech-item small {
-            color: rgba(255,255,255,0.5);
-        }
-        
-        .cta-section {
-            padding: 6rem 0;
-            text-align: center;
-        }
-        
-        .cta-card {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            border-radius: 24px;
-            padding: 4rem;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        
-        .cta-card h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-        
-        .cta-card p {
-            color: rgba(255,255,255,0.6);
-            margin-bottom: 2rem;
-        }
-        
-        footer {
-            padding: 3rem 0;
-            text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        footer p {
-            color: rgba(255,255,255,0.5);
-            font-size: 0.9rem;
-        }
-        
-        footer a {
-            color: #667eea;
-            text-decoration: none;
-        }
-        
-        .code-block {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 1.5rem;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            overflow-x: auto;
-            text-align: left;
-            margin: 1.5rem 0;
-        }
-        
-        .code-block code {
-            color: #a0a0a0;
-        }
-        
-        .code-block .command {
-            color: #667eea;
-        }
-        
-        .tips-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-        
-        .tip-card {
-            background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(39, 174, 96, 0.1) 100%);
-            border-left: 4px solid #2ecc71;
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: left;
-        }
-        
-        .tip-card h4 {
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .tip-card p {
-            color: rgba(255,255,255,0.6);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-        
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            .feature-grid,
-            .steps,
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .cta-card {
-                padding: 2rem;
-            }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clash Royale Player Analyzer</title>
+  <meta name="description" content="Clash Royale player analyzer: stats, cards, decks, battle log, chest cycle." />
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#0f1731;
+      --panel2:#0c1328;
+      --text:#e9eefc;
+      --muted:#a9b4d1;
+      --line:rgba(255,255,255,.08);
+      --accent:#6aa8ff;
+      --good:#35d07f;
+      --warn:#ffcc66;
+      --bad:#ff5a7a;
+      --shadow: 0 18px 45px rgba(0,0,0,.38);
+      --radius: 18px;
+      --radius2: 14px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      background:
+        radial-gradient(900px 500px at 10% 10%, rgba(106,168,255,.22), transparent 55%),
+        radial-gradient(900px 500px at 90% 15%, rgba(53,208,127,.16), transparent 50%),
+        radial-gradient(900px 500px at 55% 90%, rgba(255,90,122,.12), transparent 55%),
+        linear-gradient(180deg, var(--bg), #070a14);
+      color:var(--text);
+      min-height:100vh;
+    }
+    a{color:inherit}
+    .wrap{
+      max-width:1200px;
+      margin:0 auto;
+      padding:28px 18px 60px;
+    }
+    header{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:18px;
+    }
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .title{
+      font-size:26px;
+      letter-spacing:.4px;
+      margin:0;
+    }
+    .subtitle{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.4;
+      max-width:72ch;
+    }
+    .pill{
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      color:var(--muted);
+      font-size:12px;
+      box-shadow:0 10px 24px rgba(0,0,0,.25);
+      white-space:nowrap;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap:16px;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+      header{flex-direction:column; align-items:flex-start}
+    }
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card .hd{
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background:rgba(0,0,0,.18);
+    }
+    .card .hd h2{
+      margin:0;
+      font-size:14px;
+      color:#d9e5ff;
+      letter-spacing:.5px;
+      text-transform:uppercase;
+    }
+    .card .bd{padding:16px}
+    .row{display:flex; gap:10px; flex-wrap:wrap}
+    label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px}
+    input, textarea, select{
+      width:100%;
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.28);
+      color:var(--text);
+      outline:none;
+    }
+    input::placeholder{color:rgba(233,238,252,.35)}
+    .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    button{
+      border:1px solid var(--line);
+      background:rgba(106,168,255,.14);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      transition: transform .05s ease, background .2s ease, border-color .2s ease;
+      font-weight:600;
+      letter-spacing:.2px;
+    }
+    button:hover{background:rgba(106,168,255,.22); border-color:rgba(106,168,255,.45)}
+    button:active{transform: translateY(1px)}
+    button.secondary{background:rgba(255,255,255,.06)}
+    button.secondary:hover{background:rgba(255,255,255,.09)}
+    button.danger{background:rgba(255,90,122,.14)}
+    button.danger:hover{background:rgba(255,90,122,.22); border-color:rgba(255,90,122,.5)}
+    .hint{
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+    .kpi{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:10px;
+    }
+    @media (max-width: 520px){
+      .kpi{grid-template-columns:repeat(2, 1fr)}
+    }
+    .k{
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.18);
+      border-radius:var(--radius2);
+      padding:12px;
+      min-height:76px;
+    }
+    .k .lab{color:var(--muted); font-size:12px; margin-bottom:6px}
+    .k .val{font-size:18px; font-weight:800}
+    .k .sub{color:rgba(233,238,252,.7); font-size:12px; margin-top:3px}
+    .profile{
+      display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    }
+    .avatar{
+      width:48px; height:48px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(106,168,255,.25), rgba(255,255,255,.04));
+      display:flex; align-items:center; justify-content:center;
+      font-weight:900;
+      letter-spacing:.5px;
+    }
+    .pname{font-size:18px; font-weight:900; margin:0}
+    .ptag{font-family:var(--mono); color:rgba(233,238,252,.75); font-size:12px; margin-top:2px}
+    .badge{
+      border:1px solid var(--line);
+      background:rgba(53,208,127,.12);
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      color:#dff8eb;
+    }
+    .split{
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap:14px;
+    }
+    @media (max-width: 980px){
+      .split{grid-template-columns:1fr}
+    }
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .item{
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.16);
+      border-radius:var(--radius2);
+      padding:12px;
+    }
+    .item .top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .mono{font-family:var(--mono)}
+    .muted{color:var(--muted)}
+    .chips{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      margin-top:8px;
+    }
+    .chip{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:rgba(233,238,252,.85);
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px;
+      display:inline-flex;
+      gap:6px;
+      align-items:center;
+    }
+    .chip b{font-weight:800}
+    .ok{color:var(--good)}
+    .no{color:var(--bad)}
+    .warn{color:var(--warn)}
+    .hr{height:1px; background:var(--line); margin:14px 0}
+    .toast{
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      background:rgba(8, 12, 26, .92);
+      border-radius:14px;
+      box-shadow:var(--shadow);
+      color:var(--text);
+      max-width:420px;
+      display:none;
+      z-index:50;
+    }
+    .toast.show{display:block}
+    .toast .t1{font-weight:800; margin-bottom:4px}
+    .toast .t2{color:var(--muted); font-size:12px; line-height:1.4}
+    footer{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .smalllink{
+      color:rgba(233,238,252,.8);
+      text-decoration:none;
+      border-bottom:1px dashed rgba(233,238,252,.25);
+    }
+  </style>
 </head>
 <body>
-    <div class="noise"></div>
-    <div class="glow-orb glow-1"></div>
-    <div class="glow-orb glow-2"></div>
-    
-    <div class="container">
-        <nav>
-            <div class="logo">CR Analyzer</div>
-            <ul class="nav-links">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#how-it-works">How It Works</a></li>
-                <li><a href="#tips">Pro Tips</a></li>
-                <li><a href="https://github.com" target="_blank">GitHub</a></li>
-            </ul>
-        </nav>
-        
-        <section class="hero">
-            <div class="badge">Open Source Player Analytics</div>
-            <h1>Dominate the Arena with Data</h1>
-            <p>Analyze your Clash Royale stats, track card performance, and get AI-powered tips to climb the ladder faster than ever.</p>
-            <div class="btn-group">
-                <a href="#" class="btn btn-primary">Try Demo Mode</a>
-                <a href="https://developer.clashroyale.com" target="_blank" class="btn btn-secondary">Get API Token</a>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <h1 class="title">Clash Royale Player Analyzer</h1>
+        <p class="subtitle">
+          Enter a player tag and your API token to view profile stats, chest cycle, cards, deck hints, and recent battles.
+        </p>
+      </div>
+      <div class="pill">GitHub Pages • Frontend-only • Token required</div>
+    </header>
+
+    <div class="grid">
+      <!-- Left panel: inputs -->
+      <section class="card">
+        <div class="hd">
+          <h2>Lookup</h2>
+          <span class="muted" style="font-size:12px">API: royaleapi-ish UI, official data</span>
+        </div>
+        <div class="bd">
+          <div class="row">
+            <div style="flex:1; min-width:240px">
+              <label for="playerTag">Player Tag</label>
+              <input id="playerTag" placeholder="#2ABC9Y0L (include or omit #)" />
             </div>
-        </section>
-        
-        <section class="features" id="features">
-            <div class="section-title">
-                <h2>Powerful Analytics</h2>
-                <p>Everything you need to understand and improve your gameplay</p>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <div style="flex:1; min-width:240px">
+              <label for="apiToken">Clash Royale API Token (Bearer)</label>
+              <input id="apiToken" placeholder="Paste your token here (kept only in your browser unless you save it)" />
             </div>
-            
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3>Player Profile</h3>
-                    <p>View complete statistics including trophies, win rates, arena progress, and clan information all in one place.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">⚔️</div>
-                    <h3>Battle Analysis</h3>
-                    <p>Analyze your recent matches with detailed breakdowns by game mode, crowns earned, and performance trends.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🃏</div>
-                    <h3>Card Performance</h3>
-                    <p>Discover which cards you win the most with and which ones might be holding you back from climbing.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">📦</div>
-                    <h3>Chest Schedule</h3>
-                    <p>See exactly which chests are coming up in your cycle so you can plan your grinding sessions.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">💡</div>
-                    <h3>Smart Tips</h3>
-                    <p>Get personalized improvement suggestions based on your actual gameplay patterns and statistics.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🏆</div>
-                    <h3>Arena Advice</h3>
-                    <p>Receive tips tailored to your current arena level and the cards available to you.</p>
-                </div>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <div style="flex:1; min-width:240px">
+              <label for="saveMode">Token Storage</label>
+              <select id="saveMode">
+                <option value="session">Session only (recommended)</option>
+                <option value="local">Remember on this device (localStorage)</option>
+              </select>
             </div>
-        </section>
-        
-        <section class="how-it-works" id="how-it-works">
-            <div class="section-title">
-                <h2>Get Started in Minutes</h2>
-                <p>Three simple steps to start improving your gameplay</p>
+          </div>
+
+          <div class="btns">
+            <button id="btnFetch">Fetch Player</button>
+            <button id="btnBattles" class="secondary">Battle Log</button>
+            <button id="btnChests" class="secondary">Upcoming Chests</button>
+            <button id="btnAll" class="secondary">Fetch All</button>
+            <button id="btnClear" class="danger">Clear</button>
+          </div>
+
+          <div class="hint">
+            <b>Tip:</b> If you get <span class="warn">403</span>, your IP probably isn’t whitelisted in the official developer portal.
+            If you get <span class="warn">404</span>, the player tag might be wrong.
+            <div class="hr"></div>
+            <div class="muted">
+              Security note: putting tokens in a public site is risky. For a public analyzer, use a backend proxy.
             </div>
-            
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Get API Token</h3>
-                    <p>Visit developer.clashroyale.com and create a free API key. Whitelist IP: 45.79.218.79</p>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Enter Your Tag</h3>
-                    <p>Input your player tag (found in your profile) and paste your API token in the sidebar.</p>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Analyze & Improve</h3>
-                    <p>Explore your stats, find your strengths and weaknesses, and climb the ladder faster.</p>
-                </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right panel: results -->
+      <section class="card">
+        <div class="hd">
+          <h2>Dashboard</h2>
+          <span id="status" class="muted" style="font-size:12px">Idle</span>
+        </div>
+        <div class="bd">
+          <!-- Profile -->
+          <div class="profile">
+            <div class="avatar" id="avatar">CR</div>
+            <div>
+              <p class="pname" id="pname">No player loaded</p>
+              <div class="ptag" id="ptag">—</div>
             </div>
-            
-            <div class="code-block">
-                <code>
-                    <span class="command"># Clone and run locally</span><br>
-                    git clone https://github.com/yourusername/clash-royale-analyzer.git<br>
-                    cd clash-royale-analyzer<br>
-                    pip install -r requirements.txt<br>
-                    streamlit run app.py --server.port 5000
-                </code>
+            <span class="badge" id="badge" style="display:none">OK</span>
+          </div>
+
+          <div class="hr"></div>
+
+          <!-- KPI -->
+          <div class="kpi">
+            <div class="k">
+              <div class="lab">Trophies</div>
+              <div class="val" id="kTrophies">—</div>
+              <div class="sub" id="kBest">Best: —</div>
             </div>
-        </section>
-        
-        <section class="stats-section">
-            <div class="section-title">
-                <h2>Built for Clash Royale Players</h2>
-                <p>Analyze every aspect of your gameplay</p>
+            <div class="k">
+              <div class="lab">Level</div>
+              <div class="val" id="kLevel">—</div>
+              <div class="sub" id="kExp">Exp: —</div>
             </div>
-            
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-value">5+</div>
-                    <div class="stat-label">Analysis Tabs</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">10+</div>
-                    <div class="stat-label">Recent Battles</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">8</div>
-                    <div class="stat-label">Pro Tips</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">100%</div>
-                    <div class="stat-label">Free & Open Source</div>
-                </div>
+            <div class="k">
+              <div class="lab">Wins / Losses</div>
+              <div class="val" id="kWL">—</div>
+              <div class="sub" id="kWar">War Day Wins: —</div>
             </div>
-        </section>
-        
-        <section class="tech-stack">
-            <div class="tech-grid">
-                <div class="tech-item">
-                    <span>Streamlit</span>
-                    <small>Web Framework</small>
-                </div>
-                <div class="tech-item">
-                    <span>Python 3.11</span>
-                    <small>Backend</small>
-                </div>
-                <div class="tech-item">
-                    <span>Clash Royale API</span>
-                    <small>Official Data</small>
-                </div>
-                <div class="tech-item">
-                    <span>Pandas</span>
-                    <small>Data Analysis</small>
-                </div>
+            <div class="k">
+              <div class="lab">3-Crown Wins</div>
+              <div class="val" id="k3c">—</div>
+              <div class="sub" id="kPB">Personal Best: —</div>
             </div>
-        </section>
-        
-        <section id="tips">
-            <div class="section-title">
-                <h2>Pro Tips from Top Players</h2>
-                <p>Master these fundamentals to climb faster</p>
+            <div class="k">
+              <div class="lab">Clan</div>
+              <div class="val" id="kClan">—</div>
+              <div class="sub" id="kRole">Role: —</div>
             </div>
-            
-            <div class="tips-grid">
-                <div class="tip-card">
-                    <h4>Elixir Management</h4>
-                    <p>Never leak elixir! Always have a plan to spend it efficiently and avoid going below 3 elixir unless defending.</p>
-                </div>
-                <div class="tip-card">
-                    <h4>Card Counting</h4>
-                    <p>Keep track of your opponent's cycle. Knowing when their win condition is coming helps you prepare counters.</p>
-                </div>
-                <div class="tip-card">
-                    <h4>Patience Wins Games</h4>
-                    <p>Don't overcommit in single elixir. Build advantages slowly and strike when you have elixir lead.</p>
-                </div>
-                <div class="tip-card">
-                    <h4>Defense into Offense</h4>
-                    <p>A good defense often leads to the strongest counter-pushes. Defend smart, then attack with survivors.</p>
-                </div>
-                <div class="tip-card">
-                    <h4>Know Your Matchups</h4>
-                    <p>Understand which decks counter yours and adjust your playstyle. Sometimes defense is the best offense.</p>
-                </div>
-                <div class="tip-card">
-                    <h4>Watch Your Replays</h4>
-                    <p>After a loss, watch the replay to understand what went wrong. Learn from every mistake.</p>
-                </div>
+            <div class="k">
+              <div class="lab">Arena</div>
+              <div class="val" id="kArena">—</div>
+              <div class="sub" id="kLeague">—</div>
             </div>
-        </section>
-        
-        <section class="cta-section">
-            <div class="cta-card">
-                <h2>Ready to Climb the Ladder?</h2>
-                <p>Start analyzing your gameplay and get personalized tips to improve your skills.</p>
-                <div class="btn-group">
-                    <a href="#" class="btn btn-primary">Launch Analyzer</a>
-                    <a href="https://github.com" target="_blank" class="btn btn-secondary">View on GitHub</a>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="split">
+            <!-- Left: Deck + Cards -->
+            <div>
+              <h3 style="margin:0 0 10px; font-size:14px; letter-spacing:.5px; text-transform:uppercase; color:#d9e5ff;">Deck & Cards</h3>
+
+              <div class="item">
+                <div class="top">
+                  <div><b>Current Deck</b> <span class="muted">(if available)</span></div>
+                  <div class="muted" id="deckAvg">Avg elixir: —</div>
                 </div>
+                <div class="chips" id="deckChips">
+                  <span class="muted">—</span>
+                </div>
+                <div class="hint" id="deckHint" style="margin-top:10px">
+                  Enter a player and fetch data to get deck tips.
+                </div>
+              </div>
+
+              <div class="item" style="margin-top:10px">
+                <div class="top">
+                  <div><b>Top Cards</b> <span class="muted">(by level)</span></div>
+                  <div class="muted" id="cardCount">—</div>
+                </div>
+                <div class="chips" id="topCards">
+                  <span class="muted">—</span>
+                </div>
+              </div>
             </div>
-        </section>
-        
-        <footer>
-            <p>Clash Royale Analyzer | Built with Streamlit | <a href="https://developer.clashroyale.com" target="_blank">Official API</a></p>
-            <p style="margin-top: 0.5rem;">Clash Royale is a trademark of Supercell. This project is not affiliated with Supercell.</p>
-        </footer>
+
+            <!-- Right: Battles + Chests -->
+            <div>
+              <h3 style="margin:0 0 10px; font-size:14px; letter-spacing:.5px; text-transform:uppercase; color:#d9e5ff;">Recent Activity</h3>
+
+              <div class="item">
+                <div class="top">
+                  <div><b>Battle Log</b></div>
+                  <div class="muted" id="battleMeta">—</div>
+                </div>
+                <div class="list" id="battleList" style="margin-top:10px">
+                  <div class="muted">—</div>
+                </div>
+              </div>
+
+              <div class="item" style="margin-top:10px">
+                <div class="top">
+                  <div><b>Upcoming Chests</b></div>
+                  <div class="muted" id="chestMeta">—</div>
+                </div>
+                <div class="chips" id="chestChips" style="margin-top:10px">
+                  <span class="muted">—</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <details>
+            <summary style="cursor:pointer; color:rgba(233,238,252,.9); font-weight:700;">Raw JSON (debug)</summary>
+            <textarea id="raw" style="margin-top:10px; height:220px; font-family:var(--mono); font-size:12px" readonly></textarea>
+          </details>
+        </div>
+      </section>
     </div>
+
+    <footer>
+      <div>© <span id="year"></span> • Frontend-only Clash Royale Analyzer</div>
+      <div>
+        Built for GitHub Pages •
+        <span class="muted">If you want this public, use a backend proxy to hide the token.</span>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast">
+    <div class="t1" id="toastTitle">Title</div>
+    <div class="t2" id="toastMsg">Message</div>
+  </div>
+
+  <script>
+    // ========== Helpers ==========
+    const $ = (id) => document.getElementById(id);
+
+    function toast(title, msg){
+      $("toastTitle").textContent = title;
+      $("toastMsg").textContent = msg;
+      $("toast").classList.add("show");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(()=> $("toast").classList.remove("show"), 4200);
+    }
+
+    function normalizeTag(tag){
+      if(!tag) return "";
+      tag = tag.trim().toUpperCase();
+      if(tag.startsWith("#")) tag = tag.slice(1);
+      // Official API requires URL-encoded # => %23
+      return "%23" + tag;
+    }
+
+    function safeNum(v){ return (v === null || v === undefined) ? "—" : String(v); }
+
+    function setStatus(text){ $("status").textContent = text; }
+
+    function formatBattleTime(utcString){
+      // battleTime looks like: "20231205T112233.000Z"
+      if(!utcString) return "";
+      const iso = utcString.replace(
+        /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2}).*Z$/,
+        "$1-$2-$3T$4:$5:$6Z"
+      );
+      const d = new Date(iso);
+      if(isNaN(d.getTime())) return utcString;
+      return d.toLocaleString();
+    }
+
+    function computeAvgElixir(deck){
+      // Elixir cost is not provided by official API for cards, so we can't compute precisely.
+      // We'll show "—" unless you add your own card cost map later.
+      return "—";
+    }
+
+    function deckTips(deck){
+      if(!Array.isArray(deck) || deck.length === 0) return "No deck data available from the API for this player.";
+      // Simple heuristic tips (no meta/database): balance roles
+      const names = deck.map(c => (c.name || "").toLowerCase());
+      const hasSpell = names.some(n => n.includes("spell") || n.includes("zap") || n.includes("fireball") || n.includes("poison") || n.includes("arrows") || n.includes("rocket") || n.includes("log"));
+      const hasBuilding = names.some(n => n.includes("tower") || n.includes("hut") || n.includes("cannon") || n.includes("inferno") || n.includes("tesla") || n.includes("furnace"));
+      const hasWincon = names.some(n => n.includes("hog") || n.includes("giant") || n.includes("golem") || n.includes("balloon") || n.includes("miner") || n.includes("graveyard") || n.includes("royal giant") || n.includes("ram rider") || n.includes("goblin drill"));
+      const hasAirAnswer = names.some(n => n.includes("musketeer") || n.includes("archers") || n.includes("wizard") || n.includes("baby dragon") || n.includes("electro dragon") || n.includes("inferno dragon") || n.includes("mega minion"));
+
+      const tips = [];
+      tips.push("Upgrade priority: focus on your main win condition and 2–3 core support cards first.");
+      if(!hasSpell) tips.push("Consider adding at least one reliable spell (e.g., Fireball/Poison/Arrows/Log) for swarm control and finishing.");
+      if(!hasBuilding) tips.push("If you struggle vs. tanks, add a defensive building or a dedicated tank-killer card.");
+      if(!hasWincon) tips.push("Your deck may lack a clear win condition (a primary way to take towers). Add one and build around it.");
+      if(!hasAirAnswer) tips.push("Make sure you have solid air defense (at least 2 air-answer cards) to avoid getting punished by Balloon/Dragons.");
+      tips.push("Gameplay tip: track opponent’s cycle—when their main counter is out of hand, push your win condition.");
+      return tips.join(" ");
+    }
+
+    async function crFetch(path){
+      const token = $("apiToken").value.trim();
+      if(!token) throw new Error("Missing API token.");
+      const res = await fetch("https://api.clashroyale.com/v1" + path, {
+        headers: { "Authorization": "Bearer " + token }
+      });
+      const text = await res.text();
+      let data;
+      try { data = JSON.parse(text); } catch { data = { raw: text }; }
+      if(!res.ok){
+        const msg = data && (data.message || data.reason || data.error || JSON.stringify(data));
+        throw new Error(`${res.status} ${res.statusText}: ${msg}`);
+      }
+      return data;
+    }
+
+    function saveTokenIfNeeded(){
+      const mode = $("saveMode").value;
+      const token = $("apiToken").value.trim();
+      if(mode === "local"){
+        localStorage.setItem("cr_token", token);
+        toast("Saved", "Token saved to localStorage on this device.");
+      }else{
+        sessionStorage.setItem("cr_token_session", token);
+      }
+    }
+
+    function loadToken(){
+      const local = localStorage.getItem("cr_token");
+      const sess = sessionStorage.getItem("cr_token_session");
+      if(local){
+        $("saveMode").value = "local";
+        $("apiToken").value = local;
+      }else if(sess){
+        $("saveMode").value = "session";
+        $("apiToken").value = sess;
+      }
+    }
+
+    function clearUI(){
+      $("avatar").textContent = "CR";
+      $("pname").textContent = "No player loaded";
+      $("ptag").textContent = "—";
+      $("badge").style.display = "none";
+
+      $("kTrophies").textContent = "—";
+      $("kBest").textContent = "Best: —";
+      $("kLevel").textContent = "—";
+      $("kExp").textContent = "Exp: —";
+      $("kWL").textContent = "—";
+      $("kWar").textContent = "War Day Wins: —";
+      $("k3c").textContent = "—";
+      $("kPB").textContent = "Personal Best: —";
+      $("kClan").textContent = "—";
+      $("kRole").textContent = "Role: —";
+      $("kArena").textContent = "—";
+      $("kLeague").textContent = "—";
+
+      $("deckAvg").textContent = "Avg elixir: —";
+      $("deckChips").innerHTML = `<span class="muted">—</span>`;
+      $("deckHint").textContent = "Enter a player and fetch data to get deck tips.";
+
+      $("cardCount").textContent = "—";
+      $("topCards").innerHTML = `<span class="muted">—</span>`;
+
+      $("battleMeta").textContent = "—";
+      $("battleList").innerHTML = `<div class="muted">—</div>`;
+
+      $("chestMeta").textContent = "—";
+      $("chestChips").innerHTML = `<span class="muted">—</span>`;
+
+      $("raw").value = "";
+      setStatus("Idle");
+    }
+
+    function renderPlayer(p){
+      $("badge").style.display = "inline-flex";
+      $("badge").textContent = "Loaded";
+      $("avatar").textContent = (p.name || "CR").slice(0,2).toUpperCase();
+      $("pname").textContent = p.name || "Unknown";
+      $("ptag").textContent = p.tag || "—";
+
+      $("kTrophies").textContent = safeNum(p.trophies);
+      $("kBest").textContent = "Best: " + safeNum(p.bestTrophies);
+
+      // Level fields can vary by API versions; try common fields:
+      const level = p.expLevel ?? p.level ?? p.kingLevel ?? "—";
+      $("kLevel").textContent = safeNum(level);
+      $("kExp").textContent = "Exp: " + safeNum(p.expPoints ?? p.experiencePoints ?? "—");
+
+      $("kWL").textContent = `${safeNum(p.wins)}/${safeNum(p.losses)}`;
+      $("kWar").textContent = "War Day Wins: " + safeNum(p.warDayWins);
+
+      $("k3c").textContent = safeNum(p.threeCrownWins);
+      $("kPB").textContent = "Personal Best: " + safeNum(p.bestTrophies);
+
+      $("kClan").textContent = p.clan?.name ? p.clan.name : "No clan";
+      $("kRole").textContent = "Role: " + (p.role || "—");
+
+      $("kArena").textContent = p.arena?.name ? p.arena.name : "—";
+      $("kLeague").textContent = (p.currentFavouriteCard?.name ? ("Fav: " + p.currentFavouriteCard.name) : "—");
+
+      // Deck/cards
+      const deck = p.currentDeck || [];
+      if(deck.length){
+        $("deckChips").innerHTML = deck.map(c => {
+          const lvl = c.level ?? c.starLevel ?? c.maxLevel ?? "";
+          return `<span class="chip"><b>${c.name || "Card"}</b><span class="muted">Lv ${lvl || "?"}</span></span>`;
+        }).join("");
+        $("deckAvg").textContent = "Avg elixir: " + computeAvgElixir(deck);
+        $("deckHint").textContent = deckTips(deck);
+      }else{
+        $("deckChips").innerHTML = `<span class="muted">Deck not available for this player via API.</span>`;
+        $("deckHint").textContent = "Some players may not return currentDeck via the API.";
+      }
+
+      const cards = Array.isArray(p.cards) ? [...p.cards] : [];
+      cards.sort((a,b)=> (b.level||0) - (a.level||0));
+      const top = cards.slice(0, 12);
+      $("cardCount").textContent = cards.length ? `${cards.length} cards` : "—";
+      $("topCards").innerHTML = top.length
+        ? top.map(c => `<span class="chip">${c.name || "Card"} <span class="muted">Lv ${(c.level ?? "?")}</span></span>`).join("")
+        : `<span class="muted">—</span>`;
+    }
+
+    function renderBattles(list){
+      if(!Array.isArray(list) || list.length === 0){
+        $("battleMeta").textContent = "No battles";
+        $("battleList").innerHTML = `<div class="muted">—</div>`;
+        return;
+      }
+      $("battleMeta").textContent = `${list.length} recent battles`;
+      $("battleList").innerHTML = list.slice(0,8).map(b=>{
+        const mode = b.gameMode?.name || b.type || "Battle";
+        const time = formatBattleTime(b.battleTime);
+        const team = b.team?.[0];
+        const opp = b.opponent?.[0];
+        const myName = team?.name || "You";
+        const opName = opp?.name || "Opponent";
+        const myCrowns = team?.crowns ?? "—";
+        const opCrowns = opp?.crowns ?? "—";
+        const win = (myCrowns !== "—" && opCrowns !== "—") ? (Number(myCrowns) > Number(opCrowns)) : null;
+        const res = win === null ? "—" : (win ? "WIN" : "LOSS");
+        const cls = win === null ? "muted" : (win ? "ok" : "no");
+
+        return `
+          <div class="item">
+            <div class="top">
+              <div><b>${mode}</b> <span class="muted">• ${time}</span></div>
+              <div class="${cls}" style="font-weight:900">${res}</div>
+            </div>
+            <div class="chips">
+              <span class="chip"><b>${myName}</b> <span class="muted">${myCrowns}</span></span>
+              <span class="chip"><b>${opName}</b> <span class="muted">${opCrowns}</span></span>
+              ${b.arena?.name ? `<span class="chip">${b.arena.name}</span>` : ""}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderChests(chests){
+      // expected format: { items: [{ index, name }, ...] }
+      const items = chests?.items || chests || [];
+      if(!Array.isArray(items) || items.length === 0){
+        $("chestMeta").textContent = "—";
+        $("chestChips").innerHTML = `<span class="muted">—</span>`;
+        return;
+      }
+      $("chestMeta").textContent = `${items.length} upcoming`;
+      $("chestChips").innerHTML = items.slice(0, 20).map(x=>{
+        const idx = x.index ?? x.position ?? "—";
+        const name = x.name || x.chest || "Chest";
+        return `<span class="chip"><span class="muted">#${idx}</span> <b>${name}</b></span>`;
+      }).join("");
+    }
+
+    // ========== Actions ==========
+    async function fetchPlayer(){
+      const tag = normalizeTag($("playerTag").value);
+      if(!tag) throw new Error("Enter a player tag.");
+      saveTokenIfNeeded();
+      setStatus("Fetching player…");
+      const data = await crFetch(`/players/${tag}`);
+      $("raw").value = JSON.stringify(data, null, 2);
+      renderPlayer(data);
+      setStatus("Player loaded");
+      toast("Success", "Player data loaded.");
+      return data;
+    }
+
+    async function fetchBattles(){
+      const tag = normalizeTag($("playerTag").value);
+      if(!tag) throw new Error("Enter a player tag.");
+      saveTokenIfNeeded();
+      setStatus("Fetching battle log…");
+      const data = await crFetch(`/players/${tag}/battlelog`);
+      // battlelog is an array
+      $("raw").value = JSON.stringify(data, null, 2);
+      renderBattles(data);
+      setStatus("Battle log loaded");
+      toast("Success", "Battle log loaded.");
+      return data;
+    }
+
+    async function fetchChests(){
+      const tag = normalizeTag($("playerTag").value);
+      if(!tag) throw new Error("Enter a player tag.");
+      saveTokenIfNeeded();
+      setStatus("Fetching chests…");
+      const data = await crFetch(`/players/${tag}/upcomingchests`);
+      $("raw").value = JSON.stringify(data, null, 2);
+      renderChests(data);
+      setStatus("Chests loaded");
+      toast("Success", "Upcoming chests loaded.");
+      return data;
+    }
+
+    async function fetchAll(){
+      clearUI();
+      try{
+        const p = await fetchPlayer();
+        // only after player loads, fetch the rest
+        await fetchBattles();
+        await fetchChests();
+        // restore player raw json is overwritten by later fetches; show combined in debug:
+        $("raw").value = JSON.stringify({ player: p }, null, 2);
+        setStatus("All data loaded");
+      }catch(e){
+        setStatus("Error");
+        toast("Error", e.message || String(e));
+        throw e;
+      }
+    }
+
+    // ========== Wire up ==========
+    $("year").textContent = new Date().getFullYear();
+    loadToken();
+
+    $("btnFetch").addEventListener("click", async ()=>{
+      try{ await fetchPlayer(); }catch(e){ setStatus("Error"); toast("Error", e.message || String(e)); }
+    });
+    $("btnBattles").addEventListener("click", async ()=>{
+      try{ await fetchBattles(); }catch(e){ setStatus("Error"); toast("Error", e.message || String(e)); }
+    });
+    $("btnChests").addEventListener("click", async ()=>{
+      try{ await fetchChests(); }catch(e){ setStatus("Error"); toast("Error", e.message || String(e)); }
+    });
+    $("btnAll").addEventListener("click", async ()=>{
+      try{ await fetchAll(); }catch(_) {}
+    });
+    $("btnClear").addEventListener("click", ()=>{
+      $("playerTag").value = "";
+      $("raw").value = "";
+      $("apiToken").value = ($("saveMode").value === "local") ? (localStorage.getItem("cr_token") || "") : "";
+      sessionStorage.removeItem("cr_token_session");
+      clearUI();
+      toast("Cleared", "UI cleared.");
+    });
+
+    // Start with a clean dashboard
+    clearUI();
+  </script>
 </body>
 </html>
