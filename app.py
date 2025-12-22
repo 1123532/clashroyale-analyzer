@@ -575,29 +575,6 @@ def get_improvement_tips(profile, battle_stats):
     
     return tips
 
-@st.cache_data
-def get_all_cards():
-    """Fetch all cards from Clash Royale API with image URLs"""
-    try:
-        response = requests.get(f"{API_BASE_URL}/cards", headers=get_headers())
-        if response.status_code == 200:
-            cards = response.json().get('items', [])
-            card_dict = {}
-            for card in cards:
-                card_dict[card.get('name', '').lower()] = card
-            return card_dict
-    except:
-        pass
-    return {}
-
-def get_card_image_url(card_name):
-    """Get card image URL from official Clash Royale API"""
-    all_cards = get_all_cards()
-    card_key = card_name.lower()
-    if card_key in all_cards:
-        card_data = all_cards[card_key]
-        return card_data.get('iconUrls', {}).get('medium', '')
-    return None
 
 def get_arena_tips(arena_id):
     arena_tips = {
@@ -791,24 +768,12 @@ if profile:
                 with deck_cols[i % 4]:
                     card_name = card.get('name', 'Unknown')
                     card_level = card.get('level', 1)
-                    image_url = get_card_image_url(card_name)
-                    
-                    if image_url:
-                        st.markdown(f"""
-                        <div class="card-item">
-                            <img src="{image_url}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 12px; margin-bottom: 0.75rem;" loading="lazy">
-                            <div class="card-name">{card_name}</div>
-                            <div class="card-level">Level {card_level}</div>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    else:
-                        st.markdown(f"""
-                        <div class="card-item">
-                            <div style="width: 100%; height: 120px; border-radius: 12px; margin-bottom: 0.75rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2)); display: flex; align-items: center; justify-content: center; font-size: 2rem;">🃏</div>
-                            <div class="card-name">{card_name}</div>
-                            <div class="card-level">Level {card_level}</div>
-                        </div>
-                        """, unsafe_allow_html=True)
+                    st.markdown(f"""
+                    <div class="card-item">
+                        <div class="card-name">{card_name}</div>
+                        <div class="card-level">Level {card_level}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
     
     with tab2:
         st.markdown("## Recent Battle Analysis")
