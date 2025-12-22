@@ -308,49 +308,42 @@ with st.sidebar:
     5. Copy the token here
     """)
 
+profile = None
+battles = None
+chests = None
+
 if demo_mode:
     player_tag = "ProGamer2024"
     col1, col2 = st.columns([0.85, 0.15])
     with col1:
         st.info("👁️ **Demo Preview:** Showing sample player data. Try the 5 analysis tabs below!")
+    profile = DEMO_PROFILE
+    battles = DEMO_BATTLES
+    chests = DEMO_CHESTS
 else:
     player_tag = st.text_input(
         "Enter Player Tag",
         placeholder="#ABC123 or ABC123",
         help="Your Clash Royale player tag (with or without #)"
     )
-
-if demo_mode:
-    profile = DEMO_PROFILE
-    battles = DEMO_BATTLES
-    chests = DEMO_CHESTS
-elif st.button("Analyze Player", type="primary", disabled=not player_tag or not st.session_state.get('api_token')):
-    if not st.session_state.get('api_token'):
-        st.error("Please enter your API token in the sidebar first.")
-    else:
-        with st.spinner("Fetching player data..."):
-            profile = get_player_profile(player_tag)
-            battles = get_battle_log(player_tag)
-            chests = get_upcoming_chests(player_tag)
-        
-        if not profile:
-            st.error("Could not find player. Check the tag and API token, then try again.")
-        else:
-            profile = profile
-
-if demo_mode or (not demo_mode and st.session_state.get('profile_loaded')):
-    if 'profile_loaded' not in st.session_state:
-        st.session_state['profile_loaded'] = False
     
-    if demo_mode or st.session_state.get('profile_loaded'):
-        if profile and not demo_mode:
-            st.success(f"Found player: **{profile.get('name', 'Unknown')}**")
+    if st.button("Analyze Player", type="primary", disabled=not player_tag or not st.session_state.get('api_token')):
+        if not st.session_state.get('api_token'):
+            st.error("Please enter your API token in the sidebar first.")
+        else:
+            with st.spinner("Fetching player data..."):
+                profile = get_player_profile(player_tag)
+                battles = get_battle_log(player_tag)
+                chests = get_upcoming_chests(player_tag)
+            
+            if not profile:
+                st.error("Could not find player. Check the tag and API token, then try again.")
+            else:
+                st.success(f"Found player: **{profile.get('name', 'Unknown')}**")
+                st.session_state['profile_loaded'] = True
 
-if demo_mode or profile:
-    if not demo_mode:
-        st.session_state['profile_loaded'] = True
-        st.success(f"Found player: **{profile.get('name', 'Unknown')}**")
-    else:
+if profile:
+    if demo_mode:
         st.success(f"Demo Account: **{profile.get('name', 'Unknown')}** (Sample Data)")
     
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
