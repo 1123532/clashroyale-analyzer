@@ -633,7 +633,7 @@ DEMO_CHESTS = {
 st.markdown("""
 <div style="display: flex; justify-content: center; width: 100%;">
 <div class="main-header">
-    <h1>⚔️ Clash Royale Analyzer</h1>
+    <h1>👑 Clash Royale Analyzer</h1>
 </div>
 </div>
 """, unsafe_allow_html=True)
