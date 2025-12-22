@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clash Royale Player Analyzer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a237e 0%, #311b92 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 60px 40px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section h2 {
+            color: #1a237e;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .section h3 {
+            color: #311b92;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-left: 4px solid #667eea;
+            padding: 25px;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+        }
+        
+        .feature-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .feature-card p {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .steps {
+            background: #f5f7fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .step {
+            display: flex;
+            margin-bottom: 25px;
+            align-items: flex-start;
+        }
+        
+        .step:last-child {
+            margin-bottom: 0;
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+            font-size: 1.1em;
+        }
+        
+        .step-content h4 {
+            color: #1a237e;
+            margin-bottom: 8px;
+        }
+        
+        .step-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .code-block code {
+            display: block;
+            line-height: 1.5;
+        }
+        
+        .tips {
+            background: linear-gradient(135deg, #fff9e615 0%, #ffeaa715 100%);
+            border-left: 4px solid #f39c12;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .tips h3 {
+            color: #d68910;
+            margin-top: 0;
+        }
+        
+        .tips ul {
+            list-style: none;
+            padding-left: 25px;
+        }
+        
+        .tips li {
+            margin-bottom: 12px;
+            color: #666;
+            line-height: 1.6;
+            position: relative;
+        }
+        
+        .tips li:before {
+            content: "✓";
+            color: #f39c12;
+            font-weight: bold;
+            position: absolute;
+            left: -25px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin: 10px 10px 10px 0;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .tech-item {
+            background: #f5f7fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            color: #555;
+        }
+        
+        .tech-item strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        footer {
+            background: #f5f7fa;
+            padding: 30px 40px;
+            text-align: center;
+            color: #999;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .api-section {
+            background: linear-gradient(135deg, #e8f4f815 0%, #d4edda15 100%);
+            border-left: 4px solid #28a745;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .api-section h3 {
+            color: #1b5e20;
+            margin-top: 0;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 40px 20px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚔️ Clash Royale Player Analyzer</h1>
+            <p>Analyze your stats and get personalized tips to improve your gameplay</p>
+        </header>
+        
+        <div class="content">
+            <div class="section">
+                <h2>🎮 About This Project</h2>
+                <p>The Clash Royale Player Analyzer is a powerful interactive web application built with Streamlit that helps you understand your gameplay and provides personalized improvement recommendations. Whether you're a casual player or pushing for legendary ranks, this tool gives you the insights you need to climb the ladder.</p>
+            </div>
+            
+            <div class="section">
+                <h2>✨ Features</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>👤 Player Profile</h4>
+                        <p>View complete player statistics including trophies, level, arena, win/loss record, and current deck composition.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>📊 Battle Analytics</h4>
+                        <p>Analyze your recent matches with detailed win rates broken down by game mode and performance metrics.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🃏 Card Performance</h4>
+                        <p>Identify your best and worst performing cards based on actual win rates to optimize your deck building.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>📦 Chest Schedule</h4>
+                        <p>Check your upcoming chest cycle to plan your farming strategy and maximize rewards.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>💡 AI-Powered Tips</h4>
+                        <p>Get personalized improvement suggestions based on your gameplay patterns and current performance.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🏆 Arena Advice</h4>
+                        <p>Receive arena-specific tips tailored to your current level and the cards available to you.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🚀 Getting Started</h2>
+                
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Get Your API Token</h4>
+                            <p>Visit <a href="https://developer.clashroyale.com" target="_blank" style="color: #667eea;">developer.clashroyale.com</a> and sign in with your Supercell ID. Create a new API key to get started.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Configure IP Whitelist</h4>
+                            <p>In your API token settings, whitelist the IP address <strong>45.79.218.79</strong> to enable the proxy connection for optimal performance.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Clone the Repository</h4>
+                            <p>Clone this repository to your local machine or deploy it to your preferred hosting platform.</p>
+                            <div class="code-block"><code>git clone https://github.com/yourusername/clash-royale-analyzer.git</code></div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Run the Application</h4>
+                            <p>Install dependencies and start the Streamlit server.</p>
+                            <div class="code-block"><code>pip install -r requirements.txt<br>streamlit run app.py --server.port 5000</code></div>
+                        </div>
+                    </div>
+                    
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Analyze Your Profile</h4>
+                            <p>Enter your API token in the sidebar, input your player tag (with or without #), and click "Analyze Player" to get started!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>📋 Technology Stack</h2>
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <strong>Streamlit</strong>
+                        <p>Interactive web framework</p>
+                    </div>
+                    <div class="tech-item">
+                        <strong>Python 3.11</strong>
+                        <p>Core programming language</p>
+                    </div>
+                    <div class="tech-item">
+                        <strong>Requests</strong>
+                        <p>HTTP client library</p>
+                    </div>
+                    <div class="tech-item">
+                        <strong>Pandas</strong>
+                        <p>Data analysis library</p>
+                    </div>
+                    <div class="tech-item">
+                        <strong>Clash Royale API</strong>
+                        <p>Official game data</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>💻 Installation</h2>
+                
+                <h3>Prerequisites</h3>
+                <ul style="margin-left: 20px; color: #666; line-height: 1.8;">
+                    <li>Python 3.11 or higher</li>
+                    <li>pip (Python package manager)</li>
+                    <li>Valid Clash Royale account</li>
+                    <li>API token from developer.clashroyale.com</li>
+                </ul>
+                
+                <h3>Setup Steps</h3>
+                <div class="code-block"><code># Clone repository<br>git clone https://github.com/yourusername/clash-royale-analyzer.git<br>cd clash-royale-analyzer<br><br># Install dependencies<br>pip install -r requirements.txt<br><br># Run application<br>streamlit run app.py --server.port 5000</code></div>
+                
+                <p style="margin-top: 20px; color: #666;">The app will be available at <strong>http://localhost:5000</strong></p>
+            </div>
+            
+            <div class="section">
+                <h2>🔑 API Configuration</h2>
+                
+                <div class="api-section">
+                    <h3>Getting Your API Token</h3>
+                    <ol style="margin-left: 20px; color: #666; line-height: 1.8;">
+                        <li>Go to <a href="https://developer.clashroyale.com" target="_blank" style="color: #28a745;">https://developer.clashroyale.com</a></li>
+                        <li>Create a Supercell ID or sign in</li>
+                        <li>Navigate to "My API Tokens"</li>
+                        <li>Click "Create New API Key"</li>
+                        <li>Give it a name (e.g., "Clash Royale Analyzer")</li>
+                        <li>Choose "Clash Royale" as the game</li>
+                        <li>Add your IP address (or use 45.79.218.79 for the proxy)</li>
+                        <li>Copy and save your token securely</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>💡 Pro Tips for Improvement</h2>
+                <div class="tips">
+                    <h3>Maximize Your Gameplay</h3>
+                    <ul>
+                        <li><strong>Elixir Management:</strong> Never leak elixir! Always have a plan to spend it efficiently.</li>
+                        <li><strong>Card Counting:</strong> Keep track of your opponent's cycle to predict their moves.</li>
+                        <li><strong>Patience:</strong> Don't overcommit. Sometimes waiting for the right moment wins games.</li>
+                        <li><strong>Defense First:</strong> A good defense often leads to a strong counter-push.</li>
+                        <li><strong>Learn Matchups:</strong> Know which decks counter yours and play strategically against them.</li>
+                        <li><strong>Watch Replays:</strong> Analyze your losses to understand what went wrong.</li>
+                        <li><strong>Meta Awareness:</strong> Keep up with balance changes and adjust accordingly.</li>
+                        <li><strong>Placement Matters:</strong> Small tile differences can change card interactions dramatically.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>📱 How to Use</h2>
+                <ol style="margin-left: 20px; color: #666; line-height: 1.8;">
+                    <li><strong>Enter API Token:</strong> Paste your token in the sidebar settings</li>
+                    <li><strong>Enter Player Tag:</strong> Type your Clash Royale player tag (e.g., #ABC123)</li>
+                    <li><strong>Click Analyze:</strong> Click the "Analyze Player" button</li>
+                    <li><strong>Explore Tabs:</strong> 
+                        <ul style="margin-top: 10px;">
+                            <li><strong>Profile:</strong> View your complete player information</li>
+                            <li><strong>Battle Stats:</strong> Analyze recent matches and performance</li>
+                            <li><strong>Card Analysis:</strong> See which cards win the most for you</li>
+                            <li><strong>Upcoming Chests:</strong> Check your chest schedule</li>
+                            <li><strong>Improvement Tips:</strong> Get personalized recommendations</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+            
+            <div class="section">
+                <h2>🤝 Contributing</h2>
+                <p style="color: #666; line-height: 1.8;">We welcome contributions! Feel free to:</p>
+                <ul style="margin-left: 20px; color: #666; line-height: 1.8;">
+                    <li>Submit bug reports and feature requests</li>
+                    <li>Fork and create pull requests for improvements</li>
+                    <li>Improve documentation and examples</li>
+                    <li>Suggest new analytics features</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>⚠️ Important Notes</h2>
+                <div class="tips" style="background: linear-gradient(135deg, #ffe0e015 0%, #ffcccc15 100%); border-left-color: #d32f2f;">
+                    <h3 style="color: #c62828;">API & Privacy</h3>
+                    <ul>
+                        <li>Your API token is sensitive - keep it private and secure</li>
+                        <li>Only public player data is retrieved (accessible without token via API)</li>
+                        <li>The app does not store or log any player information</li>
+                        <li>Battle history is limited to your recent battles visible in the game</li>
+                        <li>Respect rate limits - don't spam requests</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>📄 License</h2>
+                <p style="color: #666; line-height: 1.8;">This project is licensed under the MIT License - see the LICENSE file for details.</p>
+            </div>
+            
+            <div class="section">
+                <h2>🔗 Resources</h2>
+                <ul style="margin-left: 20px; color: #666; line-height: 1.8;">
+                    <li><a href="https://developer.clashroyale.com/" target="_blank" style="color: #667eea;">Official Clash Royale Developer Portal</a></li>
+                    <li><a href="https://streamlit.io/" target="_blank" style="color: #667eea;">Streamlit Documentation</a></li>
+                    <li><a href="https://royaleapi.com/" target="_blank" style="color: #667eea;">RoyaleAPI Analytics</a></li>
+                    <li><a href="https://clashroyale.com/" target="_blank" style="color: #667eea;">Official Clash Royale Website</a></li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center; margin-top: 50px;">
+                <h3 style="color: #1a237e; margin-bottom: 20px;">Ready to Improve Your Game?</h3>
+                <a href="#" class="cta-button" onclick="scrollToTop(); return false;">Get Started Now</a>
+                <a href="https://github.com" target="_blank" class="cta-button" style="background: #555;">View on GitHub</a>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2024 Clash Royale Player Analyzer. Built with ❤️ using Streamlit</p>
+            <p style="margin-top: 10px;">Clash Royale is a trademark of Supercell. This project is not affiliated with Supercell.</p>
+            <p style="margin-top: 10px;"><a href="#top">Back to Top</a></p>
+        </footer>
+    </div>
+    
+    <script>
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
