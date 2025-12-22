@@ -35,17 +35,19 @@ st.markdown("""
         background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
     }
     
+    /* Main container padding */
     .main-header {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #5a4a96 100%);
-        padding: 2.5rem 2.5rem;
+        padding: 2.5rem 3rem;
         border-radius: 24px;
-        margin-bottom: 2rem;
+        margin: 0 auto 2.5rem;
         text-align: center;
         box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
         border: 1px solid rgba(255,255,255,0.1);
         animation: glow 3s ease-in-out infinite;
         position: relative;
         overflow: hidden;
+        max-width: 1200px;
     }
     
     .main-header::before {
@@ -244,13 +246,14 @@ st.markdown("""
     
     .demo-banner {
         background: linear-gradient(135deg, #f39c12 0%, #e67e22 50%, #e74c3c 100%);
-        padding: 1.25rem 1.5rem;
+        padding: 1.5rem 2rem;
         border-radius: 16px;
         text-align: center;
-        margin-bottom: 2rem;
+        margin: 1.5rem auto 2rem;
         box-shadow: 0 8px 24px rgba(243, 156, 18, 0.3);
         border: 1px solid rgba(255, 255, 255, 0.1);
         animation: glow 3s ease-in-out infinite;
+        max-width: 1200px;
     }
     
     .demo-banner p {
@@ -628,13 +631,15 @@ DEMO_CHESTS = {
 }
 
 st.markdown("""
+<div style="display: flex; justify-content: center; width: 100%;">
 <div class="main-header">
     <h1>⚔️ Clash Royale Analyzer</h1>
     <p>Master your gameplay with AI-powered insights</p>
 </div>
+</div>
 """, unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([1, 1, 1])
+col1, col2, col3 = st.columns([2, 1, 1], gap="large")
 with col3:
     demo_mode = st.toggle("📊 Demo", value=False, help="Try with sample data")
 
@@ -667,6 +672,8 @@ profile = None
 battles = None
 chests = None
 
+st.markdown("<div style='margin-top: 2rem;'></div>", unsafe_allow_html=True)
+
 if demo_mode:
     player_tag = "ProGamer2024"
     st.markdown("""
@@ -678,8 +685,8 @@ if demo_mode:
     battles = DEMO_BATTLES
     chests = DEMO_CHESTS
 else:
-    st.markdown("### Search Player")
-    col1, col2 = st.columns([3, 1])
+    st.markdown("### 🔍 Search Player")
+    col1, col2 = st.columns([3.5, 0.8], gap="medium")
     with col1:
         player_tag = st.text_input(
             "Player Tag",
@@ -688,6 +695,7 @@ else:
             label_visibility="collapsed"
         )
     with col2:
+        st.write("")
         st.write("")
         analyze_btn = st.button("🔍 Search", type="primary", disabled=not player_tag or not st.session_state.get('api_token'), use_container_width=True)
     
