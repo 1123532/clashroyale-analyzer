@@ -394,6 +394,85 @@ st.markdown("""
         transform: translateY(-3px);
     }
     
+    .stat-card {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f1629 100%);
+        border-radius: 18px;
+        padding: 1.75rem;
+        border: 1px solid rgba(102, 126, 234, 0.4);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(102, 126, 234, 0.6);
+        box-shadow: 0 12px 36px rgba(102, 126, 234, 0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    
+    .stat-label {
+        color: #9a9ac0;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 0.3px;
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+    }
+    
+    .stat-value {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 900;
+        font-size: 2.5rem;
+        letter-spacing: -1px;
+    }
+    
+    .card-row {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
+        border: 1px solid rgba(102, 126, 234, 0.2);
+        border-radius: 14px;
+        padding: 1.25rem;
+        margin: 0.75rem 0;
+        transition: all 0.3s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .card-row:hover {
+        border-color: rgba(102, 126, 234, 0.4);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        transform: translateX(4px);
+    }
+    
+    .card-name-cell {
+        font-weight: 600;
+        color: #fff;
+        flex: 1;
+    }
+    
+    .card-stat-cell {
+        color: #667eea;
+        font-weight: 600;
+        text-align: right;
+        margin-left: 1.5rem;
+    }
+    
+    .mode-card {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.1) 100%);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        border-radius: 14px;
+        padding: 1.25rem;
+        margin: 0.75rem 0;
+        transition: all 0.3s ease;
+    }
+    
+    .mode-card:hover {
+        border-color: rgba(102, 126, 234, 0.5);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+    }
+    
     .input-section {
         background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f1629 100%);
         padding: 2.5rem;
@@ -776,7 +855,7 @@ if profile:
                     """, unsafe_allow_html=True)
     
     with tab2:
-        st.markdown("## Recent Battle Analysis")
+        st.markdown("## ⚔️ Recent Battle Analysis")
         
         if battles:
             battle_stats = analyze_battles(battles)
@@ -784,32 +863,78 @@ if profile:
             if battle_stats:
                 col1, col2, col3, col4 = st.columns(4)
                 with col1:
-                    st.metric("Recent Battles", battle_stats['total_battles'])
+                    recent_battles = battle_stats['total_battles']
+                    st.markdown(f"""
+                    <div class="stat-card">
+                        <div class="stat-label">⚔️ Recent Battles</div>
+                        <div class="stat-value">{recent_battles}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
                 with col2:
-                    st.metric("Wins", battle_stats['wins'])
+                    wins = battle_stats['wins']
+                    st.markdown(f"""
+                    <div class="stat-card">
+                        <div class="stat-label">🏆 Wins</div>
+                        <div class="stat-value">{wins}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
                 with col3:
-                    st.metric("Losses", battle_stats['losses'])
+                    losses = battle_stats['losses']
+                    st.markdown(f"""
+                    <div class="stat-card">
+                        <div class="stat-label">💀 Losses</div>
+                        <div class="stat-value">{losses}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
                 with col4:
                     recent_wr = (battle_stats['wins'] / battle_stats['total_battles'] * 100) if battle_stats['total_battles'] > 0 else 0
-                    st.metric("Win Rate", f"{recent_wr:.1f}%")
+                    st.markdown(f"""
+                    <div class="stat-card">
+                        <div class="stat-label">📊 Win Rate</div>
+                        <div class="stat-value">{recent_wr:.1f}%</div>
+                    </div>
+                    """, unsafe_allow_html=True)
                 
                 col1, col2, col3 = st.columns(3)
                 with col1:
-                    st.metric("Crowns Earned", battle_stats['crowns_earned'])
+                    crowns_earned = battle_stats['crowns_earned']
+                    st.markdown(f"""
+                    <div class="stat-card">
+                        <div class="stat-label">👑 Crowns Earned</div>
+                        <div class="stat-value">{crowns_earned}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
                 with col2:
-                    st.metric("Crowns Lost", battle_stats['crowns_given'])
+                    crowns_lost = battle_stats['crowns_given']
+                    st.markdown(f"""
+                    <div class="stat-card">
+                        <div class="stat-label">😢 Crowns Lost</div>
+                        <div class="stat-value">{crowns_lost}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
                 with col3:
-                    st.metric("Draws", battle_stats['draws'])
+                    draws = battle_stats['draws']
+                    st.markdown(f"""
+                    <div class="stat-card">
+                        <div class="stat-label">🤝 Draws</div>
+                        <div class="stat-value">{draws}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
                 
                 if battle_stats['game_modes']:
-                    st.markdown("### Performance by Game Mode")
-                    mode_data = []
+                    st.markdown("<div style='margin-top: 2.5rem;'></div>", unsafe_allow_html=True)
+                    st.markdown("### 🎮 Performance by Game Mode")
                     for mode, stats in battle_stats['game_modes'].items():
                         wr = (stats['wins'] / stats['plays'] * 100) if stats['plays'] > 0 else 0
-                        mode_data.append({'Game Mode': mode, 'Battles': stats['plays'], 'Wins': stats['wins'], 'Win Rate': f"{wr:.1f}%"})
-                    st.dataframe(pd.DataFrame(mode_data), use_container_width=True, hide_index=True)
+                        st.markdown(f"""
+                        <div class="mode-card">
+                            <strong>{mode}</strong> • {stats['plays']} battles • {stats['wins']} wins • 
+                            <span style="color: #667eea; font-weight: 600;">{wr:.1f}% WR</span>
+                        </div>
+                        """, unsafe_allow_html=True)
                 
-                st.markdown("### Recent Battles")
+                st.markdown("<div style='margin-top: 2.5rem;'></div>", unsafe_allow_html=True)
+                st.markdown("### 🎯 Recent Battles")
                 for battle in battles[:10]:
                     team = battle.get('team', [{}])[0]
                     opponent = battle.get('opponent', [{}])[0]
@@ -841,7 +966,7 @@ if profile:
             st.info("No recent battles found.")
     
     with tab3:
-        st.markdown("## Card Performance Analysis")
+        st.markdown("## 🎴 Card Performance Analysis")
         
         if battles:
             battle_stats = analyze_battles(battles)
@@ -853,26 +978,45 @@ if profile:
                 col1, col2 = st.columns(2)
                 
                 with col1:
-                    st.markdown("### Best Performing Cards")
+                    st.markdown("### 🌟 Best Performing Cards")
                     best_df = df.head(5).copy()
-                    best_df['Win Rate'] = best_df['Win Rate'].apply(lambda x: f"{x:.1f}%")
-                    st.dataframe(best_df, use_container_width=True, hide_index=True)
+                    for idx, row in best_df.iterrows():
+                        wr = row['Win Rate']
+                        st.markdown(f"""
+                        <div class="card-row">
+                            <span class="card-name-cell">✨ {row['Card']}</span>
+                            <span class="card-stat-cell">{int(row['Times Used'])} used • {int(row['Wins'])} wins • {wr:.1f}%</span>
+                        </div>
+                        """, unsafe_allow_html=True)
                 
                 with col2:
-                    st.markdown("### Needs Improvement")
+                    st.markdown("### 📉 Needs Improvement")
                     worst_df = df.tail(5).copy()
-                    worst_df['Win Rate'] = worst_df['Win Rate'].apply(lambda x: f"{x:.1f}%")
-                    st.dataframe(worst_df, use_container_width=True, hide_index=True)
+                    for idx, row in worst_df.iterrows():
+                        wr = row['Win Rate']
+                        st.markdown(f"""
+                        <div class="card-row" style="opacity: 0.8;">
+                            <span class="card-name-cell">{row['Card']}</span>
+                            <span class="card-stat-cell">{int(row['Times Used'])} used • {int(row['Wins'])} wins • {wr:.1f}%</span>
+                        </div>
+                        """, unsafe_allow_html=True)
                 
-                st.markdown("### All Cards Used")
+                st.markdown("<div style='margin-top: 2.5rem;'></div>", unsafe_allow_html=True)
+                st.markdown("### 📊 All Cards Used")
                 all_df = df.copy()
-                all_df['Win Rate'] = all_df['Win Rate'].apply(lambda x: f"{x:.1f}%")
-                st.dataframe(all_df, use_container_width=True, hide_index=True)
+                for idx, row in all_df.iterrows():
+                    wr = row['Win Rate']
+                    st.markdown(f"""
+                    <div class="card-row">
+                        <span class="card-name-cell">{row['Card']}</span>
+                        <span class="card-stat-cell">{int(row['Times Used'])} used • {int(row['Wins'])} wins • {wr:.1f}%</span>
+                    </div>
+                    """, unsafe_allow_html=True)
         else:
             st.info("No battle data available for card analysis.")
     
     with tab4:
-        st.markdown("## Upcoming Chests")
+        st.markdown("## 📦 Upcoming Chests")
         
         if chests and chests.get('items'):
             chest_items = chests['items']
@@ -899,37 +1043,39 @@ if profile:
                     
                     st.markdown(f"""
                     <div class="chest-card">
-                        <div style="font-size: 2.5rem;">{emoji}</div>
-                        <div style="font-weight: 600; color: #fff; margin-top: 0.5rem;">{chest_name}</div>
-                        <div style="color: #667eea; font-size: 0.9rem;">+{index} chests away</div>
+                        <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">{emoji}</div>
+                        <div style="font-weight: 700; color: #fff; margin-bottom: 0.5rem; font-size: 1.05rem;">{chest_name}</div>
+                        <div style="color: #667eea; font-size: 0.85rem; font-weight: 600;">+{index} away</div>
                     </div>
                     """, unsafe_allow_html=True)
-                    st.write("")
         else:
             st.info("Could not fetch upcoming chests.")
     
     with tab5:
-        st.markdown("## Personalized Improvement Tips")
+        st.markdown("## 💡 Personalized Improvement Tips")
         
         battle_stats = analyze_battles(battles) if battles else None
         tips = get_improvement_tips(profile, battle_stats)
         
+        st.markdown("### 🎯 Your Personalized Tips")
         for i, tip in enumerate(tips, 1):
             st.markdown(f"""
             <div class="tip-card">
-                <strong>Tip {i}:</strong> {tip}
+                <strong>#{i}</strong> {tip}
             </div>
             """, unsafe_allow_html=True)
         
         arena_id = profile.get('arena', {}).get('id', 1)
-        st.markdown("### Arena-Specific Advice")
+        st.markdown("<div style='margin-top: 2.5rem;'></div>", unsafe_allow_html=True)
+        st.markdown("### 🏛️ Arena-Specific Advice")
         st.markdown(f"""
         <div class="arena-tip">
-            <strong>For your current arena:</strong><br>{get_arena_tips(arena_id)}
+            <strong>For your current arena:</strong><br><br>{get_arena_tips(arena_id)}
         </div>
         """, unsafe_allow_html=True)
         
-        st.markdown("### Pro Tips from Top Players")
+        st.markdown("<div style='margin-top: 2.5rem;'></div>", unsafe_allow_html=True)
+        st.markdown("### ⭐ Pro Tips from Top Players")
         pro_tips = [
             ("Elixir Management", "Never leak elixir! Always have a plan to spend it efficiently."),
             ("Card Counting", "Keep track of your opponent's cycle to predict their moves."),
@@ -946,7 +1092,7 @@ if profile:
             with cols[i % 2]:
                 st.markdown(f"""
                 <div class="pro-tip">
-                    <strong>{title}</strong><br>
+                    <strong>💚 {title}</strong><br><br>
                     {tip}
                 </div>
                 """, unsafe_allow_html=True)
