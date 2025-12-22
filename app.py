@@ -310,30 +310,34 @@ st.markdown("""
     
     div[data-testid="stMetric"] {
         background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f1629 100%);
-        border-radius: 18px;
-        padding: 1.5rem;
-        border: 1px solid rgba(102, 126, 234, 0.3);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+        border-radius: 20px;
+        padding: 2rem 1.75rem;
+        border: 1px solid rgba(102, 126, 234, 0.4);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.05);
         transition: all 0.3s ease;
+        margin-bottom: 1rem;
     }
     
     div[data-testid="stMetric"]:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+        transform: translateY(-4px);
+        border-color: rgba(102, 126, 234, 0.6);
+        box-shadow: 0 12px 36px rgba(102, 126, 234, 0.25), inset 0 1px 0 rgba(255,255,255,0.1);
     }
     
     div[data-testid="stMetric"] label {
-        color: #8a8aaa;
-        font-weight: 600;
-        font-size: 0.85rem;
+        color: #9a9ac0;
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.3px;
     }
     
     div[data-testid="stMetric"] [data-testid="stMetricValue"] {
         background: linear-gradient(135deg, #667eea, #764ba2);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-weight: 800;
-        letter-spacing: -0.5px;
+        font-weight: 900;
+        font-size: 2.2rem;
+        letter-spacing: -1px;
     }
     
     .stDataFrame {
@@ -716,46 +720,26 @@ if profile:
     ])
     
     with tab1:
-        col1, col2 = st.columns([2, 1])
-        with col1:
-            st.markdown(f"## {profile.get('name', 'Unknown')}")
-            st.caption(f"Tag: {profile.get('tag', 'N/A')}")
+        st.markdown(f"## 👤 {profile.get('name', 'Unknown')}")
+        st.caption(f"Tag: {profile.get('tag', 'N/A')}")
         
-        st.markdown("---")
+        st.markdown("<div style='margin-top: 1.5rem;'></div>", unsafe_allow_html=True)
         
-        col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            st.metric("Trophies", f"{profile.get('trophies', 0):,}")
-        with col2:
-            st.metric("Best Trophies", f"{profile.get('bestTrophies', 0):,}")
-        with col3:
-            st.metric("Level", profile.get('expLevel', 1))
-        with col4:
-            arena = profile.get('arena', {})
-            st.metric("Arena", arena.get('name', 'Unknown'))
-        
-        st.markdown("### Battle Record")
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2 = st.columns(2, gap="large")
         wins = profile.get('wins', 0)
         losses = profile.get('losses', 0)
-        with col1:
-            st.metric("Wins", f"{wins:,}")
-        with col2:
-            st.metric("Losses", f"{losses:,}")
-        with col3:
-            st.metric("Total Battles", f"{profile.get('battleCount', 0):,}")
-        with col4:
-            winrate = (wins / (wins + losses) * 100) if (wins + losses) > 0 else 0
-            st.metric("Win Rate", f"{winrate:.1f}%")
+        winrate = (wins / (wins + losses) * 100) if (wins + losses) > 0 else 0
         
-        st.markdown("### Achievements")
-        col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric("3 Crown Wins", f"{profile.get('threeCrownWins', 0):,}")
+            st.metric("🏆 Trophies", f"{profile.get('trophies', 0):,}")
+            st.metric("📊 Win Rate", f"{winrate:.1f}%")
+            st.metric("⚔️ Wins", f"{wins:,}")
+        
         with col2:
-            st.metric("Challenge Max Wins", profile.get('challengeMaxWins', 0))
-        with col3:
-            st.metric("Total Donations", f"{profile.get('totalDonations', 0):,}")
+            st.metric("👑 Best Trophies", f"{profile.get('bestTrophies', 0):,}")
+            st.metric("📈 Total Battles", f"{profile.get('battleCount', 0):,}")
+            arena = profile.get('arena', {})
+            st.metric("🎪 Arena", arena.get('name', 'Unknown'))
         
         clan = profile.get('clan')
         if clan:
