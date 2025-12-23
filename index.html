@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clash Royale Analyzer - Player Stats & Improvement Tips</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .glow-orb {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            z-index: 0;
+        }
+        
+        .glow-1 {
+            background: #667eea;
+            top: -200px;
+            right: -200px;
+            animation: floatOrb 15s ease-in-out infinite;
+        }
+        
+        .glow-2 {
+            background: #764ba2;
+            bottom: -200px;
+            left: -200px;
+            animation: floatOrb 20s ease-in-out infinite reverse;
+        }
+        
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(40px, -20px); }
+            50% { transform: translate(0, 40px); }
+            75% { transform: translate(-30px, 10px); }
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes shine {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 8rem 2rem 6rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.25) 0%, rgba(118, 75, 162, 0.15) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.5);
+            padding: 0.7rem 2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: #667eea;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 1.25rem;
+            background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.65);
+            max-width: 650px;
+            margin: 0 auto 3rem;
+            line-height: 1.7;
+            font-weight: 500;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #5a4a96 100%);
+            color: white;
+            box-shadow: 0 12px 36px rgba(102, 126, 234, 0.5);
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 18px 50px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+        }
+        
+        .features {
+            padding: 6rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-title h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+        
+        .section-title p {
+            color: rgba(255,255,255,0.65);
+            font-size: 1.15rem;
+            font-weight: 500;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(22, 33, 62, 0.9) 50%, rgba(15, 22, 41, 0.9) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(102, 126, 234, 0.6);
+            box-shadow: 0 24px 56px rgba(102, 126, 234, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.75rem;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.3px;
+        }
+        
+        .feature-card p {
+            color: rgba(255,255,255,0.65);
+            line-height: 1.7;
+            font-weight: 500;
+        }
+        
+        .how-it-works {
+            padding: 6rem 0;
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .step {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .step h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        .step p {
+            color: rgba(255,255,255,0.6);
+            line-height: 1.6;
+        }
+        
+        .stats-section {
+            padding: 6rem 0;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .stat-item {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+        
+        .stat-value {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+        
+        .stat-label {
+            color: rgba(255,255,255,0.65);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-top: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .tech-stack {
+            padding: 4rem 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .tech-grid {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .tech-item {
+            text-align: center;
+            padding: 1rem 2rem;
+        }
+        
+        .tech-item span {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .tech-item small {
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .cta-section {
+            padding: 6rem 0;
+            text-align: center;
+        }
+        
+        .cta-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 24px;
+            padding: 4rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .cta-card h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-card p {
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 2rem;
+        }
+        
+        footer {
+            padding: 3rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        footer p {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }
+        
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .code-block {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            text-align: left;
+            margin: 1.5rem 0;
+        }
+        
+        .code-block code {
+            color: #a0a0a0;
+        }
+        
+        .code-block .command {
+            color: #667eea;
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .tip-card {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(39, 174, 96, 0.1) 100%);
+            border-left: 4px solid #2ecc71;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: left;
+        }
+        
+        .tip-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tip-card p {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .feature-grid,
+            .steps,
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-card {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+    <div class="glow-orb glow-1"></div>
+    <div class="glow-orb glow-2"></div>
+    
+    <div class="container">
+        <nav>
+            <div class="logo">CR Analyzer</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#tips">Pro Tips</a></li>
+                <li><a href="https://github.com" target="_blank">GitHub</a></li>
+            </ul>
+        </nav>
+        
+        <section class="hero">
+            <div class="badge">Open Source Player Analytics</div>
+            <h1>Dominate the Arena with Data</h1>
+            <p>Analyze your Clash Royale stats, track card performance, and get AI-powered tips to climb the ladder faster than ever.</p>
+            <div class="btn-group">
+                <a href="#" class="btn btn-primary">Try Demo Mode</a>
+                <a href="https://developer.clashroyale.com" target="_blank" class="btn btn-secondary">Get API Token</a>
+            </div>
+        </section>
+        
+        <section class="features" id="features">
+            <div class="section-title">
+                <h2>Powerful Analytics</h2>
+                <p>Everything you need to understand and improve your gameplay</p>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Player Profile</h3>
+                    <p>View complete statistics including trophies, win rates, arena progress, and clan information all in one place.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚔️</div>
+                    <h3>Battle Analysis</h3>
+                    <p>Analyze your recent matches with detailed breakdowns by game mode, crowns earned, and performance trends.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🃏</div>
+                    <h3>Card Performance</h3>
+                    <p>Discover which cards you win the most with and which ones might be holding you back from climbing.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>Chest Schedule</h3>
+                    <p>See exactly which chests are coming up in your cycle so you can plan your grinding sessions.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3>Smart Tips</h3>
+                    <p>Get personalized improvement suggestions based on your actual gameplay patterns and statistics.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3>Arena Advice</h3>
+                    <p>Receive tips tailored to your current arena level and the cards available to you.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="how-it-works" id="how-it-works">
+            <div class="section-title">
+                <h2>Get Started in Minutes</h2>
+                <p>Three simple steps to start improving your gameplay</p>
+            </div>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Get API Token</h3>
+                    <p>Visit developer.clashroyale.com and create a free API key. Whitelist IP: 45.79.218.79</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Enter Your Tag</h3>
+                    <p>Input your player tag (found in your profile) and paste your API token in the sidebar.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Analyze & Improve</h3>
+                    <p>Explore your stats, find your strengths and weaknesses, and climb the ladder faster.</p>
+                </div>
+            </div>
+            
+            <div class="code-block">
+                <code>
+                    <span class="command"># Clone and run locally</span><br>
+                    git clone https://github.com/yourusername/clash-royale-analyzer.git<br>
+                    cd clash-royale-analyzer<br>
+                    pip install -r requirements.txt<br>
+                    streamlit run app.py --server.port 5000
+                </code>
+            </div>
+        </section>
+        
+        <section class="stats-section">
+            <div class="section-title">
+                <h2>Built for Clash Royale Players</h2>
+                <p>Analyze every aspect of your gameplay</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value">5+</div>
+                    <div class="stat-label">Analysis Tabs</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">10+</div>
+                    <div class="stat-label">Recent Battles</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Pro Tips</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Free & Open Source</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="tech-stack">
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <span>Streamlit</span>
+                    <small>Web Framework</small>
+                </div>
+                <div class="tech-item">
+                    <span>Python 3.11</span>
+                    <small>Backend</small>
+                </div>
+                <div class="tech-item">
+                    <span>Clash Royale API</span>
+                    <small>Official Data</small>
+                </div>
+                <div class="tech-item">
+                    <span>Pandas</span>
+                    <small>Data Analysis</small>
+                </div>
+            </div>
+        </section>
+        
+        <section id="tips">
+            <div class="section-title">
+                <h2>Pro Tips from Top Players</h2>
+                <p>Master these fundamentals to climb faster</p>
+            </div>
+            
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h4>Elixir Management</h4>
+                    <p>Never leak elixir! Always have a plan to spend it efficiently and avoid going below 3 elixir unless defending.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Card Counting</h4>
+                    <p>Keep track of your opponent's cycle. Knowing when their win condition is coming helps you prepare counters.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Patience Wins Games</h4>
+                    <p>Don't overcommit in single elixir. Build advantages slowly and strike when you have elixir lead.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Defense into Offense</h4>
+                    <p>A good defense often leads to the strongest counter-pushes. Defend smart, then attack with survivors.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Know Your Matchups</h4>
+                    <p>Understand which decks counter yours and adjust your playstyle. Sometimes defense is the best offense.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Watch Your Replays</h4>
+                    <p>After a loss, watch the replay to understand what went wrong. Learn from every mistake.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="cta-section">
+            <div class="cta-card">
+                <h2>Ready to Climb the Ladder?</h2>
+                <p>Start analyzing your gameplay and get personalized tips to improve your skills.</p>
+                <div class="btn-group">
+                    <a href="#" class="btn btn-primary">Launch Analyzer</a>
+                    <a href="https://github.com" target="_blank" class="btn btn-secondary">View on GitHub</a>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <p>Clash Royale Analyzer | Built with Streamlit | <a href="https://developer.clashroyale.com" target="_blank">Official API</a></p>
+            <p style="margin-top: 0.5rem;">Clash Royale is a trademark of Supercell. This project is not affiliated with Supercell.</p>
+        </footer>
+    </div>
+</body>
+</html>
