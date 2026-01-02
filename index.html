@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Clash Royale Insight: Analyze player stats, decks, battles, and get improvement tips." />
+  <title>Clash Royale Insight — Analyzer</title>
+
+  <style>
+    :root{
+      --bg: #070a12;
+      --panel: rgba(255,255,255,.06);
+      --panel-2: rgba(255,255,255,.08);
+      --border: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --muted2: rgba(255,255,255,.55);
+      --shadow: 0 22px 80px rgba(0,0,0,.55);
+      --radius: 18px;
+      --radius2: 14px;
+      --max: 1100px;
+      --btn: rgba(255,255,255,.10);
+      --btn2: rgba(255,255,255,.16);
+      --focus: rgba(255,255,255,.28);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background: radial-gradient(1200px 800px at 15% 10%, rgba(110,231,255,.18), transparent 55%),
+                  radial-gradient(900px 700px at 85% 20%, rgba(167,139,250,.16), transparent 55%),
+                  radial-gradient(1000px 900px at 40% 90%, rgba(34,197,94,.12), transparent 55%),
+                  linear-gradient(180deg, #050712 0%, #070a12 35%, #040611 100%);
+      overflow-x:hidden;
+    }
+
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:var(--max); margin:0 auto; padding:28px 18px 64px}
+
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; margin-bottom:28px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      padding:10px 12px; border:1px solid var(--border);
+      border-radius:999px; background:rgba(255,255,255,.04);
+      backdrop-filter: blur(10px);
+    }
+    .logo{
+      width:34px; height:34px; border-radius:10px;
+      border:1px solid var(--border);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(110,231,255,.9), transparent 55%),
+        radial-gradient(circle at 70% 70%, rgba(167,139,250,.85), transparent 55%),
+        linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.02));
+      box-shadow: 0 12px 40px rgba(0,0,0,.35);
+    }
+    .brand strong{letter-spacing:.2px}
+    .brand span{display:block; color:var(--muted2); font-size:12px; margin-top:2px}
+
+    .nav{
+      display:flex; gap:10px; flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .nav a{
+      padding:10px 12px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:rgba(255,255,255,.03);
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .nav a:hover{transform: translateY(-1px); background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.18)}
+    .nav a:focus{outline:2px solid var(--focus); outline-offset:2px}
+
+    .hero{
+      position:relative;
+      border:1px solid var(--border);
+      border-radius: calc(var(--radius) + 4px);
+      background: linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .hero::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(900px 600px at 20% 15%, rgba(110,231,255,.18), transparent 55%),
+        radial-gradient(900px 700px at 80% 20%, rgba(167,139,250,.16), transparent 55%),
+        radial-gradient(900px 700px at 35% 90%, rgba(34,197,94,.12), transparent 55%);
+      filter: blur(10px);
+      opacity:.9;
+      pointer-events:none;
+    }
+    .hero-inner{
+      position:relative;
+      padding:40px 22px;
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:22px;
+      align-items:stretch;
+    }
+
+    @media (max-width: 920px){
+      .hero-inner{grid-template-columns:1fr}
+    }
+
+    .kicker{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:8px 12px; border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.18);
+      color:var(--muted);
+      font-size:13px;
+      backdrop-filter: blur(10px);
+    }
+    .dot{
+      width:8px; height:8px; border-radius:999px;
+      background: rgba(110,231,255,.9);
+      box-shadow: 0 0 0 4px rgba(110,231,255,.18);
+    }
+
+    h1{
+      margin:16px 0 10px;
+      font-size: clamp(34px, 4.2vw, 52px);
+      line-height:1.05;
+      letter-spacing:-.6px;
+    }
+    .sub{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:16px;
+      max-width: 56ch;
+    }
+
+    .cta-row{
+      display:flex; gap:12px; flex-wrap:wrap;
+      margin:18px 0 10px;
+      align-items:center;
+    }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:10px;
+      padding:12px 16px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      background: var(--btn);
+      color: var(--text);
+      font-weight: 600;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      cursor:pointer;
+      user-select:none;
+    }
+    .btn:hover{transform: translateY(-1px); background: var(--btn2); border-color: rgba(255,255,255,.2)}
+    .btn:active{transform: translateY(0px)}
+    .btn:focus{outline:2px solid var(--focus); outline-offset:2px}
+
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(110,231,255,.18), rgba(167,139,250,.16));
+      border-color: rgba(255,255,255,.22);
+    }
+
+    .chip-row{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top:14px;
+      color: var(--muted2);
+      font-size: 13px;
+    }
+    .chip{
+      padding:8px 12px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+    }
+
+    .panel{
+      position:relative;
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(0,0,0,.20);
+      backdrop-filter: blur(12px);
+      overflow:hidden;
+      padding:18px;
+      min-height: 100%;
+    }
+
+    .panel h2{
+      margin: 2px 0 10px;
+      font-size: 16px;
+      letter-spacing:.2px;
+    }
+    .panel p{margin:0 0 14px; color:var(--muted); font-size:14px}
+
+    .mini-form{
+      display:grid; gap:10px;
+      padding:12px;
+      border-radius: var(--radius2);
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.03);
+    }
+
+    label{
+      font-size: 12px;
+      color: var(--muted2);
+      display:flex; justify-content:space-between; gap:10px;
+    }
+    .hint{color: rgba(255,255,255,.45)}
+    input{
+      width:100%;
+      padding:12px 12px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.24);
+      color: var(--text);
+      outline:none;
+      font-size: 14px;
+    }
+    input:focus{border-color: rgba(255,255,255,.26); box-shadow: 0 0 0 4px rgba(255,255,255,.08)}
+    .small{
+      color: rgba(255,255,255,.48);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .grid{
+      margin-top:22px;
+      display:grid;
+      gap:14px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (max-width: 920px){
+      .grid{grid-template-columns: 1fr}
+    }
+
+    .card{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.03);
+      padding:16px;
+      backdrop-filter: blur(10px);
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      min-height: 160px;
+    }
+    .card:hover{transform: translateY(-2px); background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.18)}
+    .card h3{margin:4px 0 8px; font-size:16px}
+    .card p{margin:0; color:var(--muted); font-size:14px; line-height:1.45}
+
+    footer{
+      margin-top: 26px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      color: rgba(255,255,255,.48);
+      font-size: 13px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand" aria-label="Clash Royale Insight">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <strong>Clash Royale Insight</strong>
+          <span>Player stats • Deck analysis • Battle trends</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Top navigation">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#about">About</a>
+      </nav>
+    </header>
+
+    <section class="hero" id="top">
+      <div class="hero-inner">
+        <div>
+          <div class="kicker"><span class="dot" aria-hidden="true"></span> Analyze smarter. Climb faster.</div>
+          <h1>Clash Royale Analyzer<br/>that turns matches into wins.</h1>
+          <p class="sub">
+            Paste your Player Tag, explore stats, decks, and battle history, and get actionable improvement tips.
+            Built for fast checks and clean insights.
+          </p>
+
+          <div class="cta-row">
+            <!-- Launch Analyzer button with your requested link -->
+            <a class="btn primary" href="https://clash-insight--charlietuesares.replit.app" target="_blank" rel="noopener">
+              🚀 Launch Analyzer
+            </a>
+
+            <button class="btn" id="copyLinkBtn" type="button">🔗 Copy Link</button>
+            <a class="btn" href="#how">📌 How it works</a>
+          </div>
+
+          <div class="chip-row" aria-label="Highlights">
+            <span class="chip">No API token needed (frontend)</span>
+            <span class="chip">Clean dashboard UX</span>
+            <span class="chip">GitHub Pages ready</span>
+          </div>
+        </div>
+
+        <aside class="panel" aria-label="Quick start">
+          <h2>Quick Start</h2>
+          <p>Optional: validate your Player Tag format before launching.</p>
+
+          <div class="mini-form">
+            <label for="tagInput">
+              Player Tag
+              <span class="hint">Example: #2PP</span>
+            </label>
+            <input id="tagInput" type="text" inputmode="text" placeholder="#YOURTAG" autocomplete="off" />
+            <button class="btn primary" id="launchWithTag" type="button">Open Analyzer with Tag</button>
+            <div class="small">
+              This page is a landing site. Your actual analyzer runs on Replit.
+              If your analyzer supports <span class="mono">?tag=</span> it will open directly with your tag.
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="grid" id="features" aria-label="Features">
+      <div class="card">
+        <h3>📊 Player Overview</h3>
+        <p>Check trophies, level, current deck, and progression indicators in one place.</p>
+      </div>
+      <div class="card">
+        <h3>🧠 Deck Insights</h3>
+        <p>Spot strengths and weaknesses, win conditions, and synergy patterns across your decks.</p>
+      </div>
+      <div class="card">
+        <h3>⚔️ Battle Trends</h3>
+        <p>Understand matchups, recent performance, and what to change to improve.</p>
+      </div>
+    </section>
+
+    <section class="grid" id="how" aria-label="How it works">
+      <div class="card">
+        <h3>1) Enter your tag</h3>
+        <p>Use the quick box above or open the analyzer directly and paste your tag.</p>
+      </div>
+      <div class="card">
+        <h3>2) Fetch & analyze</h3>
+        <p>The analyzer requests data from the backend and builds insights from your stats and battles.</p>
+      </div>
+      <div class="card">
+        <h3>3) Improve faster</h3>
+        <p>Get suggestions: upgrade priorities, deck tweaks, and matchup habits to focus on.</p>
+      </div>
+    </section>
+
+    <section class="grid" id="about" aria-label="About">
+      <div class="card">
+        <h3>🛡️ Privacy</h3>
+        <p>Your token stays on the server (not in this GitHub page). This landing page only redirects.</p>
+      </div>
+      <div class="card">
+        <h3>⚙️ Deployment</h3>
+        <p>Host this page on GitHub Pages, and host the analyzer app on Replit (your current link).</p>
+      </div>
+      <div class="card">
+        <h3>✨ Customize</h3>
+        <p>Edit the text, add screenshots, or include a demo video section to boost trust.</p>
+      </div>
+    </section>
+
+    <footer>
+      <div>© <span id="year"></span> Clash Royale Insight</div>
+      <div class="mono">Replit App: clash-insight--charlietuesares</div>
+    </footer>
+  </div>
+
+  <script>
+    const APP_URL = "https://clash-insight--charlietuesares.replit.app";
+
+    function cleanTag(raw) {
+      if (!raw) return "";
+      let t = raw.trim().toUpperCase();
+      // Replace common mistake: O -> 0 (optional, conservative)
+      // t = t.replace(/O/g, "0");
+      if (!t.startsWith("#")) t = "#" + t;
+      // Keep only valid-ish chars (#, A-Z, 0-9)
+      t = t.replace(/[^#A-Z0-9]/g, "");
+      return t;
+    }
+
+    function isLikelyValidTag(tag) {
+      // Clash Royale tags typically use set without I/O etc, but we keep it simple.
+      // Basic check: starts with # and has length >= 4
+      return /^#[A-Z0-9]{3,}$/.test(tag);
+    }
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    document.getElementById("copyLinkBtn").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(APP_URL);
+        alert("Link copied!");
+      } catch (e) {
+        // fallback
+        const temp = document.createElement("textarea");
+        temp.value = APP_URL;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+        alert("Link copied!");
+      }
+    });
+
+    document.getElementById("launchWithTag").addEventListener("click", () => {
+      const raw = document.getElementById("tagInput").value;
+      const tag = cleanTag(raw);
+
+      if (tag && !isLikelyValidTag(tag)) {
+        alert("That tag looks invalid. Example format: #2PP");
+        return;
+      }
+
+      // If your analyzer supports query params, this will be useful:
+      // https://.../?tag=%232PP
+      const url = tag ? `${APP_URL}/?tag=${encodeURIComponent(tag)}` : APP_URL;
+      window.open(url, "_blank", "noopener");
+    });
+  </script>
+</body>
+</html>
